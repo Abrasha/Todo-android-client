@@ -1,5 +1,7 @@
-package aabramov.com.todomanager;
+package aabramov.com.todomanager.activity;
 
+import aabramov.com.todomanager.R;
+import aabramov.com.todomanager.TodoApplication;
 import aabramov.com.todomanager.model.Priority;
 import aabramov.com.todomanager.model.Todo;
 import aabramov.com.todomanager.model.User;
@@ -9,13 +11,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -26,24 +24,21 @@ import java.util.List;
  */
 public class MainActivity extends AppCompatActivity {
 
+    private UserService userService;
+
+    private TextView usersResults;
+    private TextView userResult;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authorization);
 
-        final TextView usersResults = (TextView) findViewById(R.id.requestResult1);
-        final TextView userResult = (TextView) findViewById(R.id.requestResult2);
+        usersResults = (TextView) findViewById(R.id.requestResult1);
+        userResult = (TextView) findViewById(R.id.requestResult2);
 
-        Gson gson = new GsonBuilder()
-                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
-                .create();
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://10.129.203.50:8080/")
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
-
-        final UserService userService = retrofit.create(UserService.class);
+        userService = TodoApplication.getUserService();
 
         findViewById(R.id.btnGetUsers).setOnClickListener(new View.OnClickListener() {
             @Override
