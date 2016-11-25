@@ -7,7 +7,6 @@ import java.util.List;
 /**
  * @author Andrii Abramov on 11/24/16.
  */
-
 public class Todo implements Serializable {
     // TODO: 11/25/16 add status field
     private String title;

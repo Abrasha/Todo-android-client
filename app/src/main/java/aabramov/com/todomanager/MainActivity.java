@@ -21,8 +21,10 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * @author Andrii Abramov on 11/25/16.
+ */
 public class MainActivity extends AppCompatActivity {
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btnGetUsers).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                userService.listUsers().enqueue(new Callback<List<UserDetails>>() {
+                userService.getAllUsers().enqueue(new Callback<List<UserDetails>>() {
                     @Override
                     public void onResponse(Call<List<UserDetails>> call, Response<List<UserDetails>> response) {
                         usersResults.setText(response.body().toString());
