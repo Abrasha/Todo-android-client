@@ -9,6 +9,7 @@ import android.view.View;
 /**
  * @author Andrii Abramov on 11/25/16.
  */
+// TODO: 11/26/16
 public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
     private OnItemClickListener mListener;
 

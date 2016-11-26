@@ -2,7 +2,8 @@ package aabramov.com.todomanager.view.activity;
 
 import aabramov.com.todomanager.R;
 import aabramov.com.todomanager.model.adapter.UserDetailsAdapter;
-import aabramov.com.todomanager.view.fragment.ChangeServerDialog;
+import aabramov.com.todomanager.view.fragment.AddServerDialog;
+import aabramov.com.todomanager.view.fragment.SelectServerDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -81,8 +82,12 @@ public class AuthorizeActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
 
-            case R.id.menu_item_change_server:
-                showServerConfigDialog();
+            case R.id.menu_item_add_server:
+                showAddServerDialog();
+                return true;
+
+            case R.id.menu_item_select_server:
+                showSelectServerDialog();
                 return true;
 
             default:
@@ -91,9 +96,11 @@ public class AuthorizeActivity extends AppCompatActivity {
         }
     }
 
-    private void showServerConfigDialog() {
+    private void showAddServerDialog() {
+        AddServerDialog.newInstance().show(getSupportFragmentManager(), AddServerDialog.class.getName());
+    }
 
-        ChangeServerDialog.newInstance().show(getSupportFragmentManager(), ChangeServerDialog.class.getName());
-
+    private void showSelectServerDialog() {
+        SelectServerDialog.newInstance().show(getSupportFragmentManager(), AddServerDialog.class.getName());
     }
 }

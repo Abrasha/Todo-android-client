@@ -18,6 +18,8 @@ import java.io.IOException;
 
 public class RetrofitConfiguration {
 
+    public static final String TAG = RetrofitConfiguration.class.getName();
+
     private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 
     private Retrofit retrofit;
@@ -57,7 +59,7 @@ public class RetrofitConfiguration {
 
             HttpUrl newUrl = request.url().newBuilder()
                     .scheme(serverAddress.getProtocol())
-                    .host(serverAddress.getHost())
+                    .host(serverAddress.getHostname())
                     .port(serverAddress.getPort())
                     .build();
 
@@ -75,7 +77,7 @@ public class RetrofitConfiguration {
     }
 
     public ServerAddress getServerAddress() {
-        return new ServerAddress(serverAddress.getProtocol(), serverAddress.getHost(), serverAddress.getPort());
+        return new ServerAddress(serverAddress.getProtocol(), serverAddress.getHostname(), serverAddress.getPort());
     }
 
     public void setServerAddress(ServerAddress serverAddress) {

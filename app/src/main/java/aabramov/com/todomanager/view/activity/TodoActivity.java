@@ -7,7 +7,9 @@ import android.support.v7.app.AppCompatActivity;
 /**
  * @author Andrii Abramov on 11/25/16.
  */
-public class TodosActivity extends AppCompatActivity {
+public class TodoActivity extends AppCompatActivity {
+
+    public static final String TAG = TodoActivity.class.getName();
 
     @Override
     public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {

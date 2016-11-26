@@ -2,6 +2,7 @@ package aabramov.com.todomanager;
 
 import aabramov.com.todomanager.configuration.RetrofitConfiguration;
 import aabramov.com.todomanager.model.ServerAddress;
+import aabramov.com.todomanager.persistence.db.TodoDatabase;
 import aabramov.com.todomanager.service.UserService;
 import android.app.Application;
 
@@ -17,12 +18,15 @@ public class TodoApplication extends Application {
 
     private static UserService userService;
 
+    private TodoDatabase todoDatabase;
+
     @Override
     public void onCreate() {
         super.onCreate();
         application = this;
 
         retrofitConfiguration = new RetrofitConfiguration(new ServerAddress("http", "192.168.0.104", 8080));
+        todoDatabase = new TodoDatabase(getApplicationContext());
 
         userService = retrofitConfiguration.createService(UserService.class);
 
@@ -38,5 +42,9 @@ public class TodoApplication extends Application {
 
     public RetrofitConfiguration getRetrofitConfiguration() {
         return retrofitConfiguration;
+    }
+
+    public TodoDatabase getTodoDatabase() {
+        return todoDatabase;
     }
 }

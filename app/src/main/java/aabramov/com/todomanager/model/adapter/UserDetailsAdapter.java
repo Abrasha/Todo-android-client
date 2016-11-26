@@ -21,6 +21,8 @@ import java.util.List;
 
 public class UserDetailsAdapter extends RecyclerView.Adapter<UserDetailsAdapter.UserDetailsViewHolder> {
 
+    public static final String TAG = UserDetailsAdapter.class.getName();
+
     private UserService userService = TodoApplication.getUserService();
     private List<UserDetails> userDetailsList = new ArrayList<>(0);
 

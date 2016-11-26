@@ -4,6 +4,7 @@ import aabramov.com.todomanager.R;
 import aabramov.com.todomanager.TodoApplication;
 import aabramov.com.todomanager.configuration.RetrofitConfiguration;
 import aabramov.com.todomanager.model.ServerAddress;
+import aabramov.com.todomanager.persistence.data.ServersRepository;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -17,11 +18,14 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import static android.widget.Toast.LENGTH_LONG;
+
 /**
  * @author Andrii Abramov on 11/26/16.
  */
+public class AddServerDialog extends DialogFragment {
 
-public class ChangeServerDialog extends DialogFragment {
+    public static final String TAG = AddServerDialog.class.getName();
 
     private String hostName;
     private String protocol;
@@ -31,22 +35,30 @@ public class ChangeServerDialog extends DialogFragment {
     private EditText etHostname;
     private EditText etPort;
 
-    private ArrayAdapter<CharSequence> adapter;
-
     private RetrofitConfiguration configuration;
+    private ServersRepository serversRepository;
 
-    public static ChangeServerDialog newInstance() {
-        ChangeServerDialog changeServerDialog = new ChangeServerDialog();
-        changeServerDialog.configuration = TodoApplication.getApplication().getRetrofitConfiguration();
-        return changeServerDialog;
+    public static AddServerDialog newInstance() {
+        AddServerDialog dialog = new AddServerDialog();
+        TodoApplication application = TodoApplication.getApplication();
+        dialog.configuration = application.getRetrofitConfiguration();
+        dialog.serversRepository = application.getTodoDatabase().getRepository(ServersRepository.class);
+        return dialog;
     }
 
     private DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialogInterface, int i) {
             ServerAddress serverAddress = parseServerAddress();
-            configuration.setServerAddress(serverAddress);
-            Toast.makeText(getActivity(), "Changed server data to: " + serverAddress.getAsString(), Toast.LENGTH_LONG).show();
+            serversRepository.insert(serverAddress);
+            Toast.makeText(getActivity(), "Added new server: " + serverAddress.getAsString(), LENGTH_LONG).show();
+        }
+    };
+
+    private DialogInterface.OnClickListener negativeListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialogInterface, int i) {
+
         }
     };
 
@@ -57,33 +69,28 @@ public class ChangeServerDialog extends DialogFragment {
         return new ServerAddress(protocol, hostName, port);
     }
 
-    private DialogInterface.OnClickListener negativeListener = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialogInterface, int i) {
-
-        }
-    };
-
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        AlertDialog dialog = new AlertDialog.Builder(getActivity())
+        setUpData();
+
+        return createDialog(initView());
+    }
+
+    private AlertDialog createDialog(View dialogView) {
+        return new AlertDialog.Builder(getActivity())
                 .setIcon(android.R.drawable.ic_menu_edit)
                 .setTitle("Change server configuration")
                 .setPositiveButton(android.R.string.ok, positiveListener)
                 .setNegativeButton(android.R.string.cancel, negativeListener)
-                .setView(initView())
+                .setView(dialogView)
                 .create();
-
-        return dialog;
     }
 
     private View initView() {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_change_server, null);
-
-        setUpData();
 
         etHostname = (EditText) view.findViewById(R.id.etHostname);
         etPort = (EditText) view.findViewById(R.id.etPort);
@@ -92,6 +99,7 @@ public class ChangeServerDialog extends DialogFragment {
         etHostname.setText(hostName);
         etPort.setText(String.valueOf(port));
 
+        ArrayAdapter<CharSequence> adapter;
         adapter = ArrayAdapter.createFromResource(getActivity(), R.array.protocols, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
@@ -104,7 +112,7 @@ public class ChangeServerDialog extends DialogFragment {
     private void setUpData() {
         ServerAddress address = configuration.getServerAddress();
 
-        hostName = address.getHost();
+        hostName = address.getHostname();
         protocol = address.getProtocol();
         port = address.getPort();
     }
