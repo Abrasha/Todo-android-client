@@ -1,4 +1,4 @@
-package aabramov.com.todomanager.activity;
+package aabramov.com.todomanager.view.activity;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

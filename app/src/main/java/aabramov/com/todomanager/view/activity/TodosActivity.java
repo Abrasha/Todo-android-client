@@ -1,4 +1,4 @@
-package aabramov.com.todomanager.activity;
+package aabramov.com.todomanager.view.activity;
 
 import android.os.Bundle;
 import android.os.PersistableBundle;

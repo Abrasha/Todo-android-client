@@ -1,12 +1,15 @@
-package aabramov.com.todomanager.activity;
+package aabramov.com.todomanager.view.activity;
 
 import aabramov.com.todomanager.R;
 import aabramov.com.todomanager.model.adapter.UserDetailsAdapter;
+import aabramov.com.todomanager.view.fragment.ChangeServerDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -65,6 +68,32 @@ public class AuthorizeActivity extends AppCompatActivity {
                 adapter.fetchUsernames();
             }
         });
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+
+            case R.id.menu_item_change_server:
+                showServerConfigDialog();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
+
+    private void showServerConfigDialog() {
+
+        ChangeServerDialog.newInstance().show(getSupportFragmentManager(), ChangeServerDialog.class.getName());
 
     }
 }
