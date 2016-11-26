@@ -11,4 +11,6 @@ public interface PreferenceKeys {
     String KEY_PROTOCOL = KEY_PREFIX + "PROTOCOL";
     String KEY_PORT = KEY_PREFIX + "PORT";
 
+    String KEY_USER_ID = KEY_PREFIX + "USER_ID";
+
 }

@@ -2,6 +2,7 @@ package aabramov.com.todomanager.view.activity;
 
 import aabramov.com.todomanager.R;
 import aabramov.com.todomanager.model.adapter.UserDetailsAdapter;
+import aabramov.com.todomanager.view.component.RecyclerItemClickListener;
 import aabramov.com.todomanager.view.fragment.AddServerDialog;
 import aabramov.com.todomanager.view.fragment.SelectServerDialog;
 import android.os.Bundle;
@@ -12,8 +13,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 
 /**
  * @author Andrii Abramov on 11/25/16.
@@ -22,7 +23,7 @@ public class AuthorizeActivity extends AppCompatActivity {
 
     public static final String TAG = AuthorizeActivity.class.getName();
 
-    private EditText etUsername;
+    private AutoCompleteTextView etUsername;
     private Button btnAuthorize;
     private Button btnListAllUsers;
     private RecyclerView lvUsers;
@@ -59,7 +60,7 @@ public class AuthorizeActivity extends AppCompatActivity {
         adapter = new UserDetailsAdapter();
         lvUsers.setAdapter(adapter);
 
-        etUsername = (EditText) findViewById(R.id.etUsername);
+        etUsername = (AutoCompleteTextView) findViewById(R.id.etUsername);
         btnAuthorize = (Button) findViewById(R.id.btnAuthorize);
 
         btnListAllUsers = (Button) findViewById(R.id.btnListAllUsers);
