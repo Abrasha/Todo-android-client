@@ -1,6 +1,8 @@
 package aabramov.com.todomanager.configuration;
 
+import aabramov.com.todomanager.TodoApplication;
 import aabramov.com.todomanager.model.ServerAddress;
+import android.content.SharedPreferences;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import okhttp3.HttpUrl;
@@ -11,6 +13,10 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.io.IOException;
+
+import static aabramov.com.todomanager.configuration.PreferenceKeys.KEY_HOSTNAME;
+import static aabramov.com.todomanager.configuration.PreferenceKeys.KEY_PORT;
+import static aabramov.com.todomanager.configuration.PreferenceKeys.KEY_PROTOCOL;
 
 /**
  * @author Andrii Abramov on 11/26/16.
@@ -27,9 +33,9 @@ public class RetrofitConfiguration {
     private ServerAddress serverAddress;
     private HostInterceptor interceptor = new HostInterceptor();
 
-    public RetrofitConfiguration(ServerAddress serverAddress) {
+    public RetrofitConfiguration() {
 
-        this.serverAddress = serverAddress;
+        loadConfiguration();
 
         gson = new GsonBuilder()
                 .setDateFormat(DATE_FORMAT)
@@ -82,6 +88,27 @@ public class RetrofitConfiguration {
 
     public void setServerAddress(ServerAddress serverAddress) {
         this.serverAddress = serverAddress;
+        persistConfiguration();
+    }
+
+    public void persistConfiguration() {
+        SharedPreferences appPreferences = TodoApplication.getApplication().getSharedPreferences();
+        appPreferences.edit()
+                .putString(KEY_HOSTNAME, serverAddress.getHostname())
+                .putString(PreferenceKeys.KEY_PROTOCOL, serverAddress.getProtocol())
+                .putInt(PreferenceKeys.KEY_PORT, serverAddress.getPort())
+                .apply();
+    }
+
+    public void loadConfiguration() {
+        SharedPreferences appPreferences = TodoApplication.getApplication().getSharedPreferences();
+
+        String hostname = appPreferences.getString(KEY_HOSTNAME, "192.168.0.104");
+        String protocol = appPreferences.getString(KEY_PROTOCOL, "http");
+        int port = appPreferences.getInt(KEY_PORT, 8080);
+
+        this.serverAddress = new ServerAddress(protocol, hostname, port);
+
     }
 
 }

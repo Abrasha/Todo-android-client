@@ -23,7 +23,7 @@ public class UserDetailsAdapter extends RecyclerView.Adapter<UserDetailsAdapter.
 
     public static final String TAG = UserDetailsAdapter.class.getName();
 
-    private UserService userService = TodoApplication.getUserService();
+    private UserService userService = TodoApplication.getApplication().getService(UserService.class);
     private List<UserDetails> userDetailsList = new ArrayList<>(0);
 
     @Override

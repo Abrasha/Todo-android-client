@@ -1,16 +1,18 @@
 package aabramov.com.todomanager;
 
 import aabramov.com.todomanager.configuration.RetrofitConfiguration;
-import aabramov.com.todomanager.model.ServerAddress;
 import aabramov.com.todomanager.persistence.db.TodoDatabase;
 import aabramov.com.todomanager.service.UserService;
 import android.app.Application;
+import android.content.SharedPreferences;
 
 /**
  * @author Andrii Abramov on 11/25/16.
  */
 
 public class TodoApplication extends Application {
+
+    public static final String PREFERENCES_NAME = TodoApplication.class.getName() + "_preferences";
 
     private static TodoApplication application;
 
@@ -25,7 +27,7 @@ public class TodoApplication extends Application {
         super.onCreate();
         application = this;
 
-        retrofitConfiguration = new RetrofitConfiguration(new ServerAddress("http", "192.168.0.104", 8080));
+        retrofitConfiguration = new RetrofitConfiguration();
         todoDatabase = new TodoDatabase(getApplicationContext());
 
         userService = retrofitConfiguration.createService(UserService.class);
@@ -36,8 +38,8 @@ public class TodoApplication extends Application {
         return application;
     }
 
-    public static UserService getUserService() {
-        return userService;
+    public <T> T getService(Class<T> serviceClass) {
+        return retrofitConfiguration.createService(serviceClass);
     }
 
     public RetrofitConfiguration getRetrofitConfiguration() {
@@ -46,5 +48,9 @@ public class TodoApplication extends Application {
 
     public TodoDatabase getTodoDatabase() {
         return todoDatabase;
+    }
+
+    public SharedPreferences getSharedPreferences() {
+        return getSharedPreferences(PREFERENCES_NAME, MODE_PRIVATE);
     }
 }
