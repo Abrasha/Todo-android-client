@@ -15,7 +15,7 @@ public class TodoApplication extends Application {
 
     public static final String TAG = TodoApplication.class.getName();
 
-    public static final String PREFERENCES_NAME = TodoApplication.class.getName() + "_preferences";
+    private static final String PREFERENCES_NAME = TodoApplication.class.getName() + "_preferences";
     private static TodoApplication application;
 
     private RetrofitConfiguration retrofitConfiguration;

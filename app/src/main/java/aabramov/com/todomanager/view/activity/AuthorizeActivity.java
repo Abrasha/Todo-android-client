@@ -5,6 +5,7 @@ import aabramov.com.todomanager.TodoApplication;
 import aabramov.com.todomanager.model.User;
 import aabramov.com.todomanager.model.adapter.UserDetailsAdapter;
 import aabramov.com.todomanager.service.UserService;
+import aabramov.com.todomanager.view.component.InstantAutoCompleteView;
 import aabramov.com.todomanager.view.component.RecyclerItemClickListener;
 import aabramov.com.todomanager.view.fragment.AddServerDialog;
 import aabramov.com.todomanager.view.fragment.SelectServerDialog;
@@ -17,7 +18,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.*;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -34,7 +38,7 @@ public class AuthorizeActivity extends AppCompatActivity {
 
     public static final String TAG = AuthorizeActivity.class.getName();
 
-    private AutoCompleteTextView etUsername;
+    private InstantAutoCompleteView etUsername;
     private Button btnListAllUsers;
     private Button btnAuthorize;
     private RecyclerView lvUsers;
@@ -55,6 +59,8 @@ public class AuthorizeActivity extends AppCompatActivity {
     }
 
     private void initViews() {
+        adapter = new UserDetailsAdapter();
+
         lvUsers = (RecyclerView) findViewById(R.id.lvUsers);
         lvUsers.setHasFixedSize(true);
         lvUsers.setLayoutManager(new LinearLayoutManager(this));
@@ -71,12 +77,58 @@ public class AuthorizeActivity extends AppCompatActivity {
                     }
                 })
         );
-        adapter = new UserDetailsAdapter();
         lvUsers.setAdapter(adapter);
 
         progressAuthorizing = (ProgressBar) findViewById(R.id.progressAuthorizing);
 
-        etUsername = (AutoCompleteTextView) findViewById(R.id.etUsername);
+        etUsername = (InstantAutoCompleteView) findViewById(R.id.etUsername);
+        etUsername.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                etUsername.showDropDown();
+            }
+        });
+
+        loadUsernames();
+
+        btnAuthorize = (Button) findViewById(R.id.btnAuthorize);
+        btnAuthorize.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                performAuthorization();
+            }
+        });
+
+        btnListAllUsers = (Button) findViewById(R.id.btnListAllUsers);
+        btnListAllUsers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                adapter.fetchUsernames();
+            }
+        });
+
+    }
+
+    private void performAuthorization() {
+        final String username = etUsername.getText().toString();
+        progressAuthorizing.setVisibility(View.VISIBLE);
+        userService.getUserByUsername(username).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                String userId = response.body().getId();
+                TodoApplication.getApplication().setCurrentUserId(userId);
+                startTodoActivity(userId);
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "No such user: " + username, LENGTH_SHORT).show();
+                progressAuthorizing.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    private void loadUsernames() {
         userService.getUsernames().enqueue(new Callback<List<String>>() {
             @Override
             public void onResponse(Call<List<String>> call, Response<List<String>> response) {
@@ -89,42 +141,13 @@ public class AuthorizeActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Failed to fetch usernames.", LENGTH_SHORT).show();
             }
         });
+    }
 
-        btnAuthorize = (Button) findViewById(R.id.btnAuthorize);
-        btnAuthorize.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final String username = etUsername.getText().toString();
-                progressAuthorizing.setVisibility(View.VISIBLE);
-                userService.getUserByUsername(username).enqueue(new Callback<User>() {
-                    @Override
-                    public void onResponse(Call<User> call, Response<User> response) {
-                        // TODO: 11/27/16 refactoring extract
-                        String requestedId = response.body().getId();
-                        TodoApplication.getApplication().setCurrentUserId(requestedId);
-                        Intent todoActivity = new Intent(getApplicationContext(), TodoActivity.class);
-                        todoActivity.putExtra(KEY_USER_ID, requestedId);
-                        progressAuthorizing.setVisibility(View.GONE);
-                        startActivity(todoActivity);
-                    }
-
-                    @Override
-                    public void onFailure(Call<User> call, Throwable t) {
-                        Toast.makeText(getApplicationContext(), "No such user: " + username, LENGTH_SHORT).show();
-                        progressAuthorizing.setVisibility(View.GONE);
-                    }
-                });
-            }
-        });
-
-        btnListAllUsers = (Button) findViewById(R.id.btnListAllUsers);
-        btnListAllUsers.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                adapter.fetchUsernames();
-            }
-        });
-
+    private void startTodoActivity(String userId) {
+        Intent todoActivity = new Intent(getApplicationContext(), TodoActivity.class);
+        todoActivity.putExtra(KEY_USER_ID, userId);
+        progressAuthorizing.setVisibility(View.GONE);
+        startActivity(todoActivity);
     }
 
     @Override

@@ -10,9 +10,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 /**
- * Example local unit test, which will execute on the development machine (host).
- *
- * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
+ * @author Andrii Abramov on 11/27/16.
  */
 @RunWith(Parameterized.class)
 public class TestServerAddress {

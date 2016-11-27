@@ -3,7 +3,6 @@ package aabramov.com.todomanager.configuration;
 /**
  * @author Andrii Abramov on 11/27/16.
  */
-
 public interface PreferenceKeys {
 
     String KEY_PREFIX = "KEY_";

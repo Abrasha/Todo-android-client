@@ -18,7 +18,6 @@ import java.util.List;
 /**
  * @author Andrii Abramov on 11/25/16.
  */
-
 public class UserDetailsAdapter extends RecyclerView.Adapter<UserDetailsAdapter.UserDetailsViewHolder> {
 
     public static final String TAG = UserDetailsAdapter.class.getName();
