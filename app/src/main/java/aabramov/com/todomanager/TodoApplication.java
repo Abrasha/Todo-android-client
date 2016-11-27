@@ -2,7 +2,6 @@ package aabramov.com.todomanager;
 
 import aabramov.com.todomanager.configuration.RetrofitConfiguration;
 import aabramov.com.todomanager.persistence.db.TodoDatabase;
-import aabramov.com.todomanager.service.UserService;
 import android.app.Application;
 import android.content.SharedPreferences;
 
@@ -18,7 +17,6 @@ public class TodoApplication extends Application {
 
     public static final String PREFERENCES_NAME = TodoApplication.class.getName() + "_preferences";
     private static TodoApplication application;
-    private static UserService userService;
 
     private RetrofitConfiguration retrofitConfiguration;
     private TodoDatabase todoDatabase;
@@ -32,9 +30,6 @@ public class TodoApplication extends Application {
         retrofitConfiguration = new RetrofitConfiguration();
         todoDatabase = new TodoDatabase(getApplicationContext());
         currentUserId = getSharedPreferences().getString(KEY_USER_ID, null);
-
-        userService = retrofitConfiguration.createService(UserService.class);
-
     }
 
     public static TodoApplication getApplication() {

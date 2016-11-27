@@ -20,7 +20,7 @@
             android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView
-                android:id="@+id/search_result_list"
+                android:id="@+id/lvTodos"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="16dp"
@@ -37,7 +37,7 @@
                 android:tint="@android:color/white"
                 android:src="@android:drawable/ic_menu_add"
                 app:fabSize="normal"
-                app:layout_behavior="aabrasha.ua.streettranslator.fragment.ScrollFabBehavior"
+                app:layout_behavior="aabramov.com.todomanager.view.component.ScrollFabBehavior"
                 />
 
     </android.support.design.widget.CoordinatorLayout>

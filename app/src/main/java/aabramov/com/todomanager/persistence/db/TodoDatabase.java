@@ -20,7 +20,7 @@ public class TodoDatabase extends SQLiteOpenHelper {
 
     private final Context context;
 
-    private Map<Class<?>, ?> repositories = new HashMap<>(5);
+    private Map<Class<?>, Object> repositories = new HashMap<>(5);
 
     public TodoDatabase(Context context) {
         super(context, Metadata.DATABASE_NAME, null, Metadata.DATABASE_VERSION);
@@ -54,11 +54,14 @@ public class TodoDatabase extends SQLiteOpenHelper {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T getRepository(Class<T> repositoryClass) {
         if (repositories.containsKey(repositoryClass)) {
             return (T) repositories.get(repositoryClass);
         } else {
-            return insertRepository(repositoryClass);
+            T repository = insertRepository(repositoryClass);
+            repositories.put(repositoryClass, repository);
+            return repository;
         }
     }
 
@@ -67,7 +70,7 @@ public class TodoDatabase extends SQLiteOpenHelper {
             Constructor<T> constructor = repositoryClass.getDeclaredConstructor(TodoDatabase.class);
             return constructor.newInstance(this);
         } catch (Exception e) {
-            throw new IllegalArgumentException("Provided constructor with wrong argumnt list");
+            throw new IllegalArgumentException("Provided constructor with wrong argument list");
         }
     }
 

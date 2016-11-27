@@ -61,7 +61,7 @@ public class UserDetailsAdapter extends RecyclerView.Adapter<UserDetailsAdapter.
         });
     }
 
-    public static class UserDetailsViewHolder extends RecyclerView.ViewHolder {
+    protected static class UserDetailsViewHolder extends RecyclerView.ViewHolder {
 
         private TextView tvUsername;
         private TextView tvUserId;

@@ -14,14 +14,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.io.IOException;
 
-import static aabramov.com.todomanager.configuration.PreferenceKeys.KEY_HOSTNAME;
-import static aabramov.com.todomanager.configuration.PreferenceKeys.KEY_PORT;
-import static aabramov.com.todomanager.configuration.PreferenceKeys.KEY_PROTOCOL;
+import static aabramov.com.todomanager.configuration.PreferenceKeys.*;
 
 /**
  * @author Andrii Abramov on 11/26/16.
  */
-
 public class RetrofitConfiguration {
 
     public static final String TAG = RetrofitConfiguration.class.getName();
