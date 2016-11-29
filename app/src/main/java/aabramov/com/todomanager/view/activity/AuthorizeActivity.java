@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -43,6 +44,7 @@ public class AuthorizeActivity extends AppCompatActivity {
     private Button btnAuthorize;
     private RecyclerView lvUsers;
     private ProgressBar progressAuthorizing;
+    private Toolbar toolbar;
 
     private UserDetailsAdapter adapter;
 
@@ -59,6 +61,10 @@ public class AuthorizeActivity extends AppCompatActivity {
     }
 
     private void initViews() {
+
+        toolbar = (Toolbar) findViewById(R.id.action_toolbar);
+        setSupportActionBar(toolbar);
+
         adapter = new UserDetailsAdapter();
 
         lvUsers = (RecyclerView) findViewById(R.id.lvUsers);

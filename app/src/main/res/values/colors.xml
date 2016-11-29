@@ -7,4 +7,5 @@
     <color name="colorBlue">#2B12AB</color>
     <color name="danger">#FF6347</color>
     <color name="background">@android:color/darker_gray</color>
+    <color name="toolbar_orange">#ffa047</color>
 </resources>
