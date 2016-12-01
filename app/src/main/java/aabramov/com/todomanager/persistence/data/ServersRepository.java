@@ -18,10 +18,9 @@ import java.util.List;
 /**
  * @author Andrii Abramov on 11/26/16.
  */
-
 public class ServersRepository {
 
-    public static final String TAG = ServersRepository.class.getName();
+    private static final String TAG = ServersRepository.class.getName();
 
     private static final String TABLE_NAME = Servers.NAME;
 

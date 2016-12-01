@@ -13,10 +13,9 @@ import java.util.Map;
 /**
  * @author Andrii Abramov on 11/26/16.
  */
-
 public class TodoDatabase extends SQLiteOpenHelper {
 
-    public static final String TAG = TodoDatabase.class.getName();
+    private static final String TAG = TodoDatabase.class.getName();
 
     private final Context context;
 

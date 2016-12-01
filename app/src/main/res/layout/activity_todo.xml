@@ -8,7 +8,7 @@
         android:orientation="vertical"
         tools:context=".view.activity.AuthorizeActivity">
 
-    <include layout="@layout/toolbar" />
+    <include layout="@layout/toolbar"/>
 
     <android.support.design.widget.CoordinatorLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
@@ -17,17 +17,17 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        <android.support.v7.widget.RecyclerView
+        <aabramov.com.todomanager.view.component.LinearRecyclerView
                 android:id="@+id/lvTodos"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="16dp"
                 tools:listitem="@android:layout/simple_list_item_1">
 
-        </android.support.v7.widget.RecyclerView>
+        </aabramov.com.todomanager.view.component.LinearRecyclerView>
 
         <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fab_add_street"
+                android:id="@+id/fab_add_todo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"

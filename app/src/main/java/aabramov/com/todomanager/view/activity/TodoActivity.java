@@ -5,16 +5,17 @@ import aabramov.com.todomanager.TodoApplication;
 import aabramov.com.todomanager.model.User;
 import aabramov.com.todomanager.model.adapter.UserTodosAdapter;
 import aabramov.com.todomanager.service.UserService;
+import aabramov.com.todomanager.view.component.LinearRecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,7 +24,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static aabramov.com.todomanager.configuration.PreferenceKeys.KEY_USER_ID;
-import static android.widget.Toast.LENGTH_SHORT;
 
 /**
  * @author Andrii Abramov on 11/25/16.
@@ -35,10 +35,13 @@ public class TodoActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_GENERATE_TODOS = 100;
 
     @BindView(R.id.lvTodos)
-    RecyclerView lvTodos;
+    LinearRecyclerView lvTodos;
 
     @BindView(R.id.action_toolbar)
     Toolbar toolbar;
+
+    @BindView(R.id.fab_add_todo)
+    FloatingActionButton fabAddTodo;
 
     private UserService userService = TodoApplication.getApplication().getService(UserService.class);
     private UserTodosAdapter userTodosAdapter;
@@ -48,22 +51,37 @@ public class TodoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_todo);
-
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
 
+        fabAddTodo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showAddTodoDialog();
+            }
+        });
+
+        String currentUserId = loadCurrentUser();
+
+        loadTodos(currentUserId);
+    }
+
+    private void showAddTodoDialog() {
+
+    }
+
+    private String loadCurrentUser() {
         Intent intent = getIntent();
         String currentUserId = intent.getStringExtra(KEY_USER_ID);
 
         if (currentUserId == null) {
             currentUserId = TodoApplication.getApplication().getCurrentUserId();
         }
+        return currentUserId;
+    }
 
-        Toast.makeText(getApplicationContext(), "Current user Id: " + currentUserId, LENGTH_SHORT).show();
-
-        lvTodos.setLayoutManager(new LinearLayoutManager(this));
-
+    private void loadTodos(String currentUserId) {
         userService.getUser(currentUserId).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
@@ -77,7 +95,6 @@ public class TodoActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Failed to fetch user.", Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
     @Override

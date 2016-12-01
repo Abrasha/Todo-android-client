@@ -7,14 +7,14 @@ import aabramov.com.todomanager.model.UserDetails;
 import aabramov.com.todomanager.model.adapter.UserDetailsAdapter;
 import aabramov.com.todomanager.service.UserService;
 import aabramov.com.todomanager.view.component.InstantAutoCompleteView;
+import aabramov.com.todomanager.view.component.LinearRecyclerView;
 import aabramov.com.todomanager.view.component.RecyclerItemClickListener;
 import aabramov.com.todomanager.view.fragment.AddServerDialog;
 import aabramov.com.todomanager.view.fragment.SelectServerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -52,7 +52,7 @@ public class AuthorizeActivity extends AppCompatActivity {
     Button btnAuthorize;
 
     @BindView(R.id.lvUsers)
-    RecyclerView lvUsers;
+    LinearRecyclerView lvUsers;
 
     @BindView(R.id.progressAuthorizing)
     ProgressBar progressAuthorizing;
@@ -67,8 +67,10 @@ public class AuthorizeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_authorization);
         ButterKnife.bind(this);
+
         userService = TodoApplication.getApplication().getService(UserService.class);
 
         initViews();
@@ -78,27 +80,14 @@ public class AuthorizeActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
 
-        adapter = new UserDetailsAdapter();
+        initRecycleView();
 
-        lvUsers.setHasFixedSize(true);
-        lvUsers.setLayoutManager(new LinearLayoutManager(this));
-        lvUsers.addOnItemTouchListener(
-                new RecyclerItemClickListener(getApplicationContext(), lvUsers, new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        UserDetails userId = adapter.getAtPosition(position);
-                        startTodoActivity(userId.getId());
-                    }
+        initOnClickListeners();
 
-                    @Override
-                    public void onLongItemClick(View view, int position) {
-                        // todo handler
-                        Log.d(TAG, "onLongItemClick: clicked on " + position);
-                    }
-                })
-        );
-        lvUsers.setAdapter(adapter);
+        loadUsernames();
+    }
 
+    private void initOnClickListeners() {
         etUsername.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -119,8 +108,19 @@ public class AuthorizeActivity extends AppCompatActivity {
                 adapter.fetchUsernames();
             }
         });
+    }
 
-        loadUsernames();
+    private void initRecycleView() {
+        adapter = new UserDetailsAdapter();
+
+        lvUsers.setHasFixedSize(true);
+        lvUsers.addOnItemTouchListener(createOnClickListener());
+        lvUsers.setAdapter(adapter);
+    }
+
+    @NonNull
+    private RecyclerItemClickListener createOnClickListener() {
+        return new RecyclerItemClickListener(getApplicationContext(), lvUsers, new UserAuthorizeClickListener());
     }
 
     private void performAuthorization() {
@@ -146,8 +146,7 @@ public class AuthorizeActivity extends AppCompatActivity {
         userService.getUsernames().enqueue(new Callback<List<String>>() {
             @Override
             public void onResponse(Call<List<String>> call, Response<List<String>> response) {
-                ArrayAdapter<String> usernamesAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, response.body());
-                etUsername.setAdapter(usernamesAdapter);
+                etUsername.setAdapter(createUserDetailsAdapter(response));
             }
 
             @Override
@@ -155,6 +154,11 @@ public class AuthorizeActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Failed to fetch usernames.", LENGTH_SHORT).show();
             }
         });
+    }
+
+    @NonNull
+    private ArrayAdapter<String> createUserDetailsAdapter(Response<List<String>> response) {
+        return new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, response.body());
     }
 
     private void startTodoActivity(String userId) {
@@ -194,6 +198,21 @@ public class AuthorizeActivity extends AppCompatActivity {
 
     private void showSelectServerDialog() {
         SelectServerDialog.newInstance().show(getSupportFragmentManager(), SelectServerDialog.class.getName());
+    }
+
+    private class UserAuthorizeClickListener implements RecyclerItemClickListener.OnItemClickListener {
+
+        @Override
+        public void onItemClick(View view, int position) {
+            UserDetails userId = adapter.getAtPosition(position);
+            startTodoActivity(userId.getId());
+        }
+
+        @Override
+        public void onLongItemClick(View view, int position) {
+            Log.d(TAG, "onLongItemClick: clicked on " + position);
+        }
+
     }
 
 }

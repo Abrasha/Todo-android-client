@@ -25,7 +25,6 @@ import static android.widget.Toast.LENGTH_LONG;
 /**
  * @author Andrii Abramov on 11/26/16.
  */
-
 public class SelectServerDialog extends DialogFragment {
 
     private static final String TAG = SelectServerDialog.class.getName();
