@@ -28,6 +28,8 @@ import static android.widget.Toast.LENGTH_LONG;
 
 public class SelectServerDialog extends DialogFragment {
 
+    private static final String TAG = SelectServerDialog.class.getName();
+
     private Spinner dropdownServers;
     private ImageButton btnAddServer;
 

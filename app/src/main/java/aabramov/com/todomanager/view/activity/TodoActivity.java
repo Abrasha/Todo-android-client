@@ -16,6 +16,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -28,12 +30,15 @@ import static android.widget.Toast.LENGTH_SHORT;
  */
 public class TodoActivity extends AppCompatActivity {
 
-    public static final String TAG = TodoActivity.class.getName();
+    private static final String TAG = TodoActivity.class.getName();
 
     private static final int REQUEST_CODE_GENERATE_TODOS = 100;
 
-    private RecyclerView lvTodos;
-    private Toolbar toolbar;
+    @BindView(R.id.lvTodos)
+    RecyclerView lvTodos;
+
+    @BindView(R.id.action_toolbar)
+    Toolbar toolbar;
 
     private UserService userService = TodoApplication.getApplication().getService(UserService.class);
     private UserTodosAdapter userTodosAdapter;
@@ -44,7 +49,8 @@ public class TodoActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_todo);
 
-        toolbar = (Toolbar) findViewById(R.id.action_toolbar);
+        ButterKnife.bind(this);
+
         setSupportActionBar(toolbar);
 
         Intent intent = getIntent();
@@ -56,7 +62,6 @@ public class TodoActivity extends AppCompatActivity {
 
         Toast.makeText(getApplicationContext(), "Current user Id: " + currentUserId, LENGTH_SHORT).show();
 
-        lvTodos = (RecyclerView) findViewById(R.id.lvTodos);
         lvTodos.setLayoutManager(new LinearLayoutManager(this));
 
         userService.getUser(currentUserId).enqueue(new Callback<User>() {

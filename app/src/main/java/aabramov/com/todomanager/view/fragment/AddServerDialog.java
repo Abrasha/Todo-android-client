@@ -25,7 +25,7 @@ import static android.widget.Toast.LENGTH_LONG;
  */
 public class AddServerDialog extends DialogFragment {
 
-    public static final String TAG = AddServerDialog.class.getName();
+    private static final String TAG = AddServerDialog.class.getName();
 
     private String hostName;
     private String protocol;
@@ -99,9 +99,7 @@ public class AddServerDialog extends DialogFragment {
         etHostname.setText(hostName);
         etPort.setText(String.valueOf(port));
 
-        ArrayAdapter<CharSequence> adapter;
-        adapter = ArrayAdapter.createFromResource(getActivity(), R.array.protocols, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.protocols, android.R.layout.simple_spinner_item);
 
         dropdownProtocol.setAdapter(adapter);
         dropdownProtocol.setSelection(adapter.getPosition(protocol));

@@ -31,10 +31,10 @@ public class InstantAutoCompleteView extends AutoCompleteTextView {
     protected void onFocusChanged(boolean focused, int direction,
                                   Rect previouslyFocusedRect) {
         super.onFocusChanged(focused, direction, previouslyFocusedRect);
-        if (focused && getAdapter() != null) {
-            performFiltering(getText(), 0);
-            showDropDown();
-        }
+//        if (focused && getAdapter() != null) {
+//            performFiltering(getText(), 0);
+//            showDropDown();
+//        }
     }
 
 }

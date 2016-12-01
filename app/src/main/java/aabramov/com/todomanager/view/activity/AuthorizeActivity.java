@@ -24,6 +24,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -38,14 +40,25 @@ import static android.widget.Toast.LENGTH_SHORT;
  */
 public class AuthorizeActivity extends AppCompatActivity {
 
-    public static final String TAG = AuthorizeActivity.class.getName();
+    private static final String TAG = AuthorizeActivity.class.getName();
 
-    private InstantAutoCompleteView etUsername;
-    private Button btnListAllUsers;
-    private Button btnAuthorize;
-    private RecyclerView lvUsers;
-    private ProgressBar progressAuthorizing;
-    private Toolbar toolbar;
+    @BindView(R.id.etUsername)
+    InstantAutoCompleteView etUsername;
+
+    @BindView(R.id.btnListAllUsers)
+    Button btnListAllUsers;
+
+    @BindView(R.id.btnAuthorize)
+    Button btnAuthorize;
+
+    @BindView(R.id.lvUsers)
+    RecyclerView lvUsers;
+
+    @BindView(R.id.progressAuthorizing)
+    ProgressBar progressAuthorizing;
+
+    @BindView(R.id.action_toolbar)
+    Toolbar toolbar;
 
     private UserDetailsAdapter adapter;
 
@@ -55,7 +68,7 @@ public class AuthorizeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authorization);
-
+        ButterKnife.bind(this);
         userService = TodoApplication.getApplication().getService(UserService.class);
 
         initViews();
@@ -63,12 +76,10 @@ public class AuthorizeActivity extends AppCompatActivity {
 
     private void initViews() {
 
-        toolbar = (Toolbar) findViewById(R.id.action_toolbar);
         setSupportActionBar(toolbar);
 
         adapter = new UserDetailsAdapter();
 
-        lvUsers = (RecyclerView) findViewById(R.id.lvUsers);
         lvUsers.setHasFixedSize(true);
         lvUsers.setLayoutManager(new LinearLayoutManager(this));
         lvUsers.addOnItemTouchListener(
@@ -88,15 +99,6 @@ public class AuthorizeActivity extends AppCompatActivity {
         );
         lvUsers.setAdapter(adapter);
 
-        progressAuthorizing = (ProgressBar) findViewById(R.id.progressAuthorizing);
-
-        etUsername = (InstantAutoCompleteView) findViewById(R.id.etUsername);
-        etUsername.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                etUsername.showDropDown();
-            }
-        });
         etUsername.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -104,7 +106,6 @@ public class AuthorizeActivity extends AppCompatActivity {
             }
         });
 
-        btnAuthorize = (Button) findViewById(R.id.btnAuthorize);
         btnAuthorize.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -112,7 +113,6 @@ public class AuthorizeActivity extends AppCompatActivity {
             }
         });
 
-        btnListAllUsers = (Button) findViewById(R.id.btnListAllUsers);
         btnListAllUsers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -12,6 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -22,20 +24,25 @@ import static android.widget.Toast.LENGTH_SHORT;
 
 public class GenerateRandomTodosActivity extends AppCompatActivity {
 
+    private final String TAG = GenerateRandomTodosActivity.class.getName();
+
     private UserService userService = TodoApplication.getApplication().getService(UserService.class);
     private TodoService todoService = TodoApplication.getApplication().getService(TodoService.class);
-    private ProgressBar progressGenerating;
-    private Spinner dropdownUsers;
-    private EditText etCount;
+
+    @BindView(R.id.progressGenerating)
+    ProgressBar progressGenerating;
+
+    @BindView(R.id.dropdownSelectUser)
+    Spinner dropdownUsers;
+
+    @BindView(R.id.etTodosCount)
+    EditText etCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_generate_random_todos);
-
-        progressGenerating = (ProgressBar) findViewById(R.id.progressGenerating);
-        dropdownUsers = (Spinner) findViewById(R.id.dropdownSelectUser);
-        etCount = (EditText) findViewById(R.id.etTodosCount);
+        ButterKnife.bind(this);
 
         findViewById(R.id.btnGenerate).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,7 +93,7 @@ public class GenerateRandomTodosActivity extends AppCompatActivity {
     private class UserAdapter extends ArrayAdapter<UserDetails> {
 
         UserAdapter(List<UserDetails> objects) {
-            super(getApplicationContext(), android.R.layout.simple_spinner_item, objects);
+            super(GenerateRandomTodosActivity.this, android.R.layout.simple_spinner_item, objects);
         }
 
         @NonNull
@@ -96,7 +103,7 @@ public class GenerateRandomTodosActivity extends AppCompatActivity {
             View result = convertView;
 
             if (result == null) {
-                result = getLayoutInflater().inflate(android.R.layout.simple_spinner_item, parent, false);
+                result = getLayoutInflater().inflate(android.R.layout.simple_spinner_item, null, false);
             }
 
             TextView itemText = (TextView) result.findViewById(android.R.id.text1);
@@ -106,7 +113,7 @@ public class GenerateRandomTodosActivity extends AppCompatActivity {
             } else {
                 itemText.setText("null at position #" + position);
             }
-            return convertView;
+            return result;
         }
     }
 

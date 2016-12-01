@@ -11,6 +11,7 @@ import android.view.View;
  */
 // TODO: 11/26/16
 public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
+
     private OnItemClickListener mListener;
 
     public interface OnItemClickListener {

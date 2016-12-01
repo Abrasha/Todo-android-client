@@ -3,7 +3,7 @@
       xmlns:appCompat="http://schemas.android.com/apk/res-auto">
     <item
             android:id="@+id/menu_item_add_random_todo"
-            android:title="Add random users"
+            android:title="Add random todos"
             android:icon="@android:drawable/ic_media_play"
             appCompat:showAsAction="ifRoom|withText"/>
 </menu>
