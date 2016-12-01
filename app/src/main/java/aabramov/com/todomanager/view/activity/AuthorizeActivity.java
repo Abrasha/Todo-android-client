@@ -3,6 +3,7 @@ package aabramov.com.todomanager.view.activity;
 import aabramov.com.todomanager.R;
 import aabramov.com.todomanager.TodoApplication;
 import aabramov.com.todomanager.model.User;
+import aabramov.com.todomanager.model.UserDetails;
 import aabramov.com.todomanager.model.adapter.UserDetailsAdapter;
 import aabramov.com.todomanager.service.UserService;
 import aabramov.com.todomanager.view.component.InstantAutoCompleteView;
@@ -74,11 +75,13 @@ public class AuthorizeActivity extends AppCompatActivity {
                 new RecyclerItemClickListener(getApplicationContext(), lvUsers, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        Log.d(TAG, "onItemClick: clicked on " + position);
+                        UserDetails userId = adapter.getAtPosition(position);
+                        startTodoActivity(userId.getId());
                     }
 
                     @Override
                     public void onLongItemClick(View view, int position) {
+                        // todo handler
                         Log.d(TAG, "onLongItemClick: clicked on " + position);
                     }
                 })
@@ -91,6 +94,12 @@ public class AuthorizeActivity extends AppCompatActivity {
         etUsername.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
+                etUsername.showDropDown();
+            }
+        });
+        etUsername.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 etUsername.showDropDown();
             }
         });

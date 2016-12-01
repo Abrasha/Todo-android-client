@@ -44,6 +44,10 @@ public class UserDetailsAdapter extends RecyclerView.Adapter<UserDetailsAdapter.
         return userDetailsList.size();
     }
 
+    public UserDetails getAtPosition(int position) {
+        return userDetailsList.get(position);
+    }
+
     public void fetchUsernames() {
         userService.getAllUsers().enqueue(new Callback<List<UserDetails>>() {
             @Override

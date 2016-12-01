@@ -3,7 +3,7 @@ package aabramov.com.todomanager.model.adapter;
 import aabramov.com.todomanager.TodoApplication;
 import aabramov.com.todomanager.model.Todo;
 import aabramov.com.todomanager.model.User;
-import aabramov.com.todomanager.service.UserService;
+import aabramov.com.todomanager.service.TodoService;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,7 +23,7 @@ public class UserTodosAdapter extends RecyclerView.Adapter<UserTodosAdapter.User
 
     public static final String TAG = UserTodosAdapter.class.getName();
 
-    private UserService userService = TodoApplication.getApplication().getService(UserService.class);
+    private TodoService todoService = TodoApplication.getApplication().getService(TodoService.class);
     private User currentUser;
 
     public UserTodosAdapter(User currentUser) {
@@ -51,7 +51,7 @@ public class UserTodosAdapter extends RecyclerView.Adapter<UserTodosAdapter.User
     }
 
     public void fetchUser() {
-        userService.getUserTodos(currentUser.getId()).enqueue(new Callback<List<Todo>>() {
+        todoService.getUserTodos(currentUser.getId()).enqueue(new Callback<List<Todo>>() {
             @Override
             public void onResponse(Call<List<Todo>> call, Response<List<Todo>> response) {
                 currentUser.setTodos(response.body());
