@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/activity_generate_random_todos"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context="aabramov.com.todomanager.view.activity.GenerateRandomTodosActivity">
+
+    <include layout="@layout/toolbar"/>
+
+    <Spinner
+            android:id="@+id/dropdownSelectUser"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dialog"/>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+        <EditText
+                android:id="@+id/etTodosCount"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:inputType="numberSigned"
+                android:layout_weight="1"
+                android:hint="count"/>
+
+        <Button
+                android:id="@+id/btnGenerate"
+                android:text="Generate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"/>
+
+    </LinearLayout>
+
+    <ProgressBar
+            android:id="@+id/progressGenerating"
+            android:indeterminate="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="?android:attr/progressBarStyleSmall"/>
+
+</LinearLayout>

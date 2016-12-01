@@ -104,8 +104,6 @@ public class AuthorizeActivity extends AppCompatActivity {
             }
         });
 
-        loadUsernames();
-
         btnAuthorize = (Button) findViewById(R.id.btnAuthorize);
         btnAuthorize.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,6 +120,7 @@ public class AuthorizeActivity extends AppCompatActivity {
             }
         });
 
+        loadUsernames();
     }
 
     private void performAuthorization() {

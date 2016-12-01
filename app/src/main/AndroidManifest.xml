@@ -19,6 +19,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".view.activity.TodoActivity"/>
+        <activity android:name=".view.activity.GenerateRandomTodosActivity">
+        </activity>
     </application>
 
 </manifest>
