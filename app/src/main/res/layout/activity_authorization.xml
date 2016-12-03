@@ -10,43 +10,51 @@
 
     <include layout="@layout/toolbar"/>
 
-    <aabramov.com.todomanager.view.component.InstantAutoCompleteView
-            android:id="@+id/etUsername"
+    <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textShortMessage|textPersonName"
-            style="@style/Widget.AppCompat.Light.AutoCompleteTextView"
-            android:hint="enter your username"/>
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16px">
 
-    <ProgressBar
-            android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="?android:attr/progressBarStyleSmall"
-            />
+        <aabramov.com.todomanager.view.component.InstantAutoCompleteView
+                android:id="@+id/etUsername"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textShortMessage|textPersonName"
+                style="@style/Widget.AppCompat.AutoCompleteTextView"
+                android:hint="enter your username"/>
 
-    <Button
-            android:id="@+id/btnAuthorize"
-            android:text="Show my Todos!"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+        <ProgressBar
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="?android:attr/progressBarStyleSmall"
+                />
 
-    <ProgressBar
-            android:id="@+id/progressAuthorizing"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="?android:attr/progressBarStyleLarge"
-            android:visibility="gone"
-            android:indeterminate="true"/>
+        <Button
+                android:id="@+id/btnAuthorize"
+                android:text="Show my Todos!"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
-    <Button
-            android:id="@+id/btnListAllUsers"
-            android:text="List all users"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+        <ProgressBar
+                android:id="@+id/progressAuthorizing"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="?android:attr/progressBarStyleLarge"
+                android:visibility="gone"
+                android:indeterminate="true"/>
 
-    <aabramov.com.todomanager.view.component.LinearRecyclerView
-            android:id="@+id/lvUsers"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+        <Button
+                android:id="@+id/btnListAllUsers"
+                android:text="List all users"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        <aabramov.com.todomanager.view.component.LinearRecyclerView
+                android:id="@+id/lvUsers"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+    </LinearLayout>
 </LinearLayout>

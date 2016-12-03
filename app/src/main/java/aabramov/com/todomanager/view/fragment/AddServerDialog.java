@@ -11,12 +11,15 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 import static android.widget.Toast.LENGTH_LONG;
 
@@ -31,14 +34,20 @@ public class AddServerDialog extends DialogFragment {
     private String protocol;
     private int port;
 
-    private Spinner dropdownProtocol;
-    private EditText etHostname;
-    private EditText etPort;
+    @BindView(R.id.dropdownProtocol)
+    Spinner dropdownProtocol;
+
+    @BindView(R.id.etHostname)
+    EditText etHostname;
+
+    @BindView(R.id.etPort)
+    EditText etPort;
 
     private RetrofitConfiguration configuration;
     private ServersRepository serversRepository;
 
     public static AddServerDialog newInstance() {
+        Log.d(TAG, "newInstance: creating AddServerDialog instance");
         AddServerDialog dialog = new AddServerDialog();
         TodoApplication application = TodoApplication.getApplication();
         dialog.configuration = application.getRetrofitConfiguration();
@@ -51,6 +60,7 @@ public class AddServerDialog extends DialogFragment {
         public void onClick(DialogInterface dialogInterface, int i) {
             ServerAddress serverAddress = parseServerAddress();
             serversRepository.insert(serverAddress);
+            Log.d(TAG, "onClick: Added new server: " + serverAddress.getAsString());
             Toast.makeText(getActivity(), "Added new server: " + serverAddress.getAsString(), LENGTH_LONG).show();
         }
     };
@@ -82,7 +92,7 @@ public class AddServerDialog extends DialogFragment {
     private AlertDialog createDialog(View dialogView) {
         return new AlertDialog.Builder(getActivity())
                 .setIcon(android.R.drawable.ic_menu_edit)
-                .setTitle("Change server configuration")
+                .setTitle("Add application server")
                 .setPositiveButton(android.R.string.ok, positiveListener)
                 .setNegativeButton(android.R.string.cancel, negativeListener)
                 .setView(dialogView)
@@ -90,11 +100,9 @@ public class AddServerDialog extends DialogFragment {
     }
 
     private View initView() {
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_change_server, null);
+        View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_change_server, null, false);
 
-        etHostname = (EditText) view.findViewById(R.id.etHostname);
-        etPort = (EditText) view.findViewById(R.id.etPort);
-        dropdownProtocol = (Spinner) view.findViewById(R.id.dropdownProtocol);
+        ButterKnife.bind(this, view);
 
         etHostname.setText(hostName);
         etPort.setText(String.valueOf(port));

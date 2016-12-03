@@ -17,6 +17,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 import java.util.List;
 
@@ -29,8 +31,11 @@ public class SelectServerDialog extends DialogFragment {
 
     private static final String TAG = SelectServerDialog.class.getName();
 
-    private Spinner dropdownServers;
-    private ImageButton btnAddServer;
+    @BindView(R.id.dropdownServers)
+    Spinner dropdownServers;
+
+    @BindView(R.id.btnAddServer)
+    ImageButton btnAddServer;
 
     private RetrofitConfiguration configuration;
     private ServersRepository serversRepository;
@@ -69,8 +74,7 @@ public class SelectServerDialog extends DialogFragment {
     private View initView() {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_select_server, null);
 
-        dropdownServers = (Spinner) view.findViewById(R.id.dropdownServers);
-        btnAddServer = (ImageButton) view.findViewById(R.id.btnAddServer);
+        ButterKnife.bind(this, view);
 
         List<ServerAddress> servers = serversRepository.findAll();
 
