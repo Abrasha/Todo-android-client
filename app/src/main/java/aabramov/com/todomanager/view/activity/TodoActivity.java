@@ -6,6 +6,7 @@ import aabramov.com.todomanager.model.User;
 import aabramov.com.todomanager.model.adapter.UserTodosAdapter;
 import aabramov.com.todomanager.service.UserService;
 import aabramov.com.todomanager.view.component.LinearRecyclerView;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -65,6 +66,12 @@ public class TodoActivity extends AppCompatActivity {
         String currentUserId = loadCurrentUser();
 
         loadTodos(currentUserId);
+    }
+
+    public static void start(Context context, String userId) {
+        Intent todoActivity = new Intent(context, TodoActivity.class);
+        todoActivity.putExtra(KEY_USER_ID, userId);
+        context.startActivity(todoActivity);
     }
 
     private void showAddTodoDialog() {

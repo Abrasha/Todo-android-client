@@ -32,7 +32,6 @@ import retrofit2.Response;
 
 import java.util.List;
 
-import static aabramov.com.todomanager.configuration.PreferenceKeys.KEY_USER_ID;
 import static android.widget.Toast.LENGTH_SHORT;
 
 /**
@@ -50,6 +49,9 @@ public class AuthorizeActivity extends AppCompatActivity {
 
     @BindView(R.id.btnAuthorize)
     Button btnAuthorize;
+
+    @BindView(R.id.btnRegister)
+    Button btnRegister;
 
     @BindView(R.id.lvUsers)
     LinearRecyclerView lvUsers;
@@ -108,6 +110,19 @@ public class AuthorizeActivity extends AppCompatActivity {
                 adapter.fetchUsernames();
             }
         });
+
+        btnRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startRegisterActivity();
+            }
+        });
+    }
+
+    private void startRegisterActivity() {
+        Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
     private void initRecycleView() {
@@ -162,10 +177,8 @@ public class AuthorizeActivity extends AppCompatActivity {
     }
 
     private void startTodoActivity(String userId) {
-        Intent todoActivity = new Intent(getApplicationContext(), TodoActivity.class);
-        todoActivity.putExtra(KEY_USER_ID, userId);
         progressAuthorizing.setVisibility(View.GONE);
-        startActivity(todoActivity);
+        TodoActivity.start(this, userId);
     }
 
     @Override
