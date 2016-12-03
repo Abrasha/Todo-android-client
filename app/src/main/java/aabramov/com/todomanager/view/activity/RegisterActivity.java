@@ -6,6 +6,8 @@ import aabramov.com.todomanager.model.User;
 import aabramov.com.todomanager.model.UserExistsDto;
 import aabramov.com.todomanager.service.UserService;
 import aabramov.com.todomanager.view.fragment.InformationDialog;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -13,6 +15,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import butterknife.BindColor;
+import butterknife.BindDrawable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit2.Call;
@@ -32,6 +37,21 @@ public class RegisterActivity extends AppCompatActivity {
     @BindView(R.id.btnRegister)
     Button btnRegister;
 
+    @BindView(R.id.imgUsernameExists)
+    ImageView imgUsernameExists;
+
+    @BindColor(android.R.color.holo_red_dark)
+    int redColor;
+
+    @BindColor(android.R.color.holo_green_light)
+    int greenColor;
+
+    @BindDrawable(R.drawable.ic_done_black)
+    Drawable icSuccess;
+
+    @BindDrawable(R.drawable.ic_not_interested_black)
+    Drawable icBanned;
+
     private final UserService userService = TodoApplication.getApplication().getService(UserService.class);
 
     @Override
@@ -41,6 +61,10 @@ public class RegisterActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
+
+//        DrawableCompat.setTint(icBanned, redColor);
+//        DrawableCompat.setTint(icSuccess, greenColor);
+
         initClickHandlers();
     }
 
@@ -48,7 +72,7 @@ public class RegisterActivity extends AppCompatActivity {
         btnCheckIfExists.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                checkIfUsernameIsBusy();
             }
         });
 
@@ -61,13 +85,48 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
+    private void checkIfUsernameIsBusy() {
+        String username = parseUsername();
+        userService.usernameExists(username).enqueue(new Callback<UserExistsDto>() {
+            @Override
+            public void onResponse(Call<UserExistsDto> call, Response<UserExistsDto> response) {
+                highlightUsername(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<UserExistsDto> call, Throwable t) {
+                Log.e(TAG, "onFailure: ", t);
+            }
+        });
+    }
+
+    private void highlightUsername(UserExistsDto details) {
+
+        if (details.getExists()) {
+            etNewUsername.setTextColor(redColor);
+            imgUsernameExists.setImageDrawable(icBanned);
+            icBanned.mutate().setColorFilter(redColor, PorterDuff.Mode.DST_ATOP);
+            imgUsernameExists.setVisibility(View.VISIBLE);
+        } else {
+            etNewUsername.setTextColor(greenColor);
+            imgUsernameExists.setImageDrawable(icSuccess);
+            icSuccess.mutate().setColorFilter(greenColor, PorterDuff.Mode.DST_ATOP);
+            imgUsernameExists.setVisibility(View.VISIBLE);
+        }
+
+    }
+
     private void performRegistration() {
-        String username = etNewUsername.getText().toString();
+        String username = parseUsername();
         if (usernameIsValid(username)) {
             validateUsername(username);
         } else {
             InformationDialog.show("Error", "No username provided", getSupportFragmentManager());
         }
+    }
+
+    private String parseUsername() {
+        return etNewUsername.getText().toString();
     }
 
     private boolean usernameIsValid(CharSequence username) {

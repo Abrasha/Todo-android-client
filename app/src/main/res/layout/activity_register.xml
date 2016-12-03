@@ -16,12 +16,29 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-
-        <EditText
-                android:id="@+id/etNewUsername"
-                android:hint="your login"
+        <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content">
+
+            <EditText
+                    android:id="@+id/etNewUsername"
+                    android:hint="your login"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:selectAllOnFocus="true"
+                    android:textSize="24sp"
+                    android:maxLines="1"/>
+
+            <ImageView
+                    android:id="@+id/imgUsernameExists"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:contentDescription="user exists status"/>
+
+        </LinearLayout>
 
         <Button
                 android:id="@+id/btnCheckIfExists"
