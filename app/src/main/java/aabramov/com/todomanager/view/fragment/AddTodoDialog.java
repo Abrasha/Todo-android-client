@@ -50,16 +50,11 @@ public class AddTodoDialog extends DialogFragment implements DatePickerDialog.On
     Button btnSetTime;
 
     private final Date todoDate = new Date();
-    private final TodoService todoService = TodoApplication.getApplication().getService(TodoService.class);
     private Calendar calendar = Calendar.getInstance();
     private boolean todoAdded = false;
 
     public interface OnDismissListener {
         void onDismiss(Todo added);
-    }
-
-    public static AddTodoDialog newInstance() {
-        return newInstance(null);
     }
 
     public static AddTodoDialog newInstance(OnDismissListener listener) {
@@ -74,7 +69,6 @@ public class AddTodoDialog extends DialogFragment implements DatePickerDialog.On
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         View view = initView();
-
 
         return new AlertDialog.Builder(getActivity())
                 .setView(view)

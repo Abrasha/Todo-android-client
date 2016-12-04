@@ -8,6 +8,8 @@ import aabramov.com.todomanager.model.adapter.UserTodosAdapter;
 import aabramov.com.todomanager.service.TodoService;
 import aabramov.com.todomanager.service.UserService;
 import aabramov.com.todomanager.view.component.LinearRecyclerView;
+import aabramov.com.todomanager.view.component.OnLeftSwipeCallback;
+import aabramov.com.todomanager.view.component.OnRightSwipeCallback;
 import aabramov.com.todomanager.view.fragment.AddTodoDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +18,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -68,6 +71,8 @@ public class TodoActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
 
+        initRecyclerView();
+
         fabAddTodo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -77,6 +82,25 @@ public class TodoActivity extends AppCompatActivity {
 
         loadCurrentUser();
         fetchUser();
+    }
+
+    private void initRecyclerView() {
+        ItemTouchHelper.SimpleCallback removeOnRightSwipeCallback = new OnRightSwipeCallback(this) {
+            @Override
+            public void onRightSwipe(int position) {
+                Log.d(TAG, "onRightSwipe: right swipe on element " + position);
+//                openConfirmToRemoveDialog(position);
+            }
+        };
+        ItemTouchHelper.SimpleCallback updateOnLeftSwipeCallback = new OnLeftSwipeCallback(this) {
+            @Override
+            public void onLeftSwipe(int position) {
+                Log.d(TAG, "onLeftSwipe: left swipe on element " + position);
+//                updateStreetEntry(position);
+            }
+        };
+        new ItemTouchHelper(removeOnRightSwipeCallback).attachToRecyclerView(lvTodos);
+        new ItemTouchHelper(updateOnLeftSwipeCallback).attachToRecyclerView(lvTodos);
     }
 
     private void showAddTodoDialog() {
