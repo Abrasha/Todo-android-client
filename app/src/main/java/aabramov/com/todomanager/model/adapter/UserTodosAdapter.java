@@ -2,7 +2,7 @@ package aabramov.com.todomanager.model.adapter;
 
 import aabramov.com.todomanager.TodoApplication;
 import aabramov.com.todomanager.model.Todo;
-import aabramov.com.todomanager.model.User;
+import aabramov.com.todomanager.model.UserDetails;
 import aabramov.com.todomanager.service.TodoService;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,6 +16,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,9 +27,11 @@ public class UserTodosAdapter extends RecyclerView.Adapter<UserTodosAdapter.User
     public static final String TAG = UserTodosAdapter.class.getName();
 
     private TodoService todoService = TodoApplication.getApplication().getService(TodoService.class);
-    private User currentUser;
+    private UserDetails currentUser;
 
-    public UserTodosAdapter(User currentUser) {
+    private List<Todo> userTodos = new ArrayList<>(0);
+
+    public UserTodosAdapter(UserDetails currentUser) {
         this.currentUser = currentUser;
     }
 
@@ -41,21 +44,36 @@ public class UserTodosAdapter extends RecyclerView.Adapter<UserTodosAdapter.User
 
     @Override
     public void onBindViewHolder(UserTodosViewHolder holder, int position) {
-        Todo item = currentUser.getTodos().get(position);
+        Todo item = userTodos.get(position);
         holder.tvTitle.setText(item.getTitle());
         holder.tvBody.setText(item.getBody());
     }
 
     @Override
     public int getItemCount() {
-        return currentUser.getTodos().size();
+        return userTodos.size();
+    }
+
+    public Todo getAtPosition(int position) {
+        return userTodos.get(position);
+    }
+
+    public void setAtPosition(int position, Todo item) {
+        userTodos.set(position, item);
+        notifyItemChanged(position);
+    }
+
+    public void setItems(List<Todo> items) {
+        userTodos.clear();
+        userTodos.addAll(items);
     }
 
     public void fetchTodos() {
         todoService.getUserTodos(currentUser.getId()).enqueue(new Callback<List<Todo>>() {
             @Override
             public void onResponse(Call<List<Todo>> call, Response<List<Todo>> response) {
-                currentUser.setTodos(response.body());
+                userTodos.clear();
+                userTodos = response.body();
                 notifyDataSetChanged();
             }
 

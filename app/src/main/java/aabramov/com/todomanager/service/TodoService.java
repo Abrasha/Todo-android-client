@@ -21,4 +21,11 @@ public interface TodoService {
     @POST("/users/{userId}/todos/generate")
     Call<List<Todo>> generateTodoForUser(@Path("userId") String userId, @Query("count") int count);
 
+    @PATCH("/users/{userId}/todos/{todoId}")
+    Call<Todo> updateTodoForUser(@Path("userId") String userId, @Path("todoId") String todoId, @Body Todo todo);
+
+    @DELETE("/users/{userId}/todos/{todoId}")
+    Call<List<Todo>> deleteTodoForUser(@Path("userId") String userId, @Path("todoId") String todoId);
+
+
 }

@@ -34,4 +34,6 @@ public interface UserService {
     @GET("/usernames/exists/{username}")
     Call<UserExistsDto> usernameExists(@Path("username") String username);
 
+    @GET("/users/details/{userId}")
+    Call<UserDetails> getUserDetails(@Path("userId") String userId);
 }

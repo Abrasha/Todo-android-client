@@ -4,6 +4,7 @@ import aabramov.com.todomanager.R;
 import aabramov.com.todomanager.TodoApplication;
 import aabramov.com.todomanager.model.Todo;
 import aabramov.com.todomanager.model.User;
+import aabramov.com.todomanager.model.UserDetails;
 import aabramov.com.todomanager.model.adapter.UserTodosAdapter;
 import aabramov.com.todomanager.service.TodoService;
 import aabramov.com.todomanager.service.UserService;
@@ -29,6 +30,8 @@ import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import java.util.List;
 
 import static aabramov.com.todomanager.configuration.PreferenceKeys.KEY_USER_ID;
 
@@ -89,18 +92,35 @@ public class TodoActivity extends AppCompatActivity {
             @Override
             public void onRightSwipe(int position) {
                 Log.d(TAG, "onRightSwipe: right swipe on element " + position);
-//                openConfirmToRemoveDialog(position);
             }
         };
         ItemTouchHelper.SimpleCallback updateOnLeftSwipeCallback = new OnLeftSwipeCallback(this) {
             @Override
             public void onLeftSwipe(int position) {
                 Log.d(TAG, "onLeftSwipe: left swipe on element " + position);
-//                updateStreetEntry(position);
+                deleteItem(position);
             }
         };
         new ItemTouchHelper(removeOnRightSwipeCallback).attachToRecyclerView(lvTodos);
         new ItemTouchHelper(updateOnLeftSwipeCallback).attachToRecyclerView(lvTodos);
+    }
+
+    private void deleteItem(final int position) {
+        Todo toDelete = userTodosAdapter.getAtPosition(position);
+
+        todoService.deleteTodoForUser(currentUserId, toDelete.getId()).enqueue(new Callback<List<Todo>>() {
+            @Override
+            public void onResponse(Call<List<Todo>> call, Response<List<Todo>> response) {
+                userTodosAdapter.notifyItemRemoved(position);
+                userTodosAdapter.fetchTodos();
+            }
+
+            @Override
+            public void onFailure(Call<List<Todo>> call, Throwable t) {
+
+            }
+        });
+
     }
 
     private void showAddTodoDialog() {
@@ -137,16 +157,16 @@ public class TodoActivity extends AppCompatActivity {
     }
 
     private void fetchUser() {
-        userService.getUser(currentUserId).enqueue(new Callback<User>() {
+        userService.getUserDetails(currentUserId).enqueue(new Callback<UserDetails>() {
             @Override
-            public void onResponse(Call<User> call, Response<User> response) {
+            public void onResponse(Call<UserDetails> call, Response<UserDetails> response) {
                 userTodosAdapter = new UserTodosAdapter(response.body());
                 lvTodos.setAdapter(userTodosAdapter);
                 fetchTodos();
             }
 
             @Override
-            public void onFailure(Call<User> call, Throwable t) {
+            public void onFailure(Call<UserDetails> call, Throwable t) {
                 Log.e(TAG, "onFailure: call", t);
                 Toast.makeText(getApplicationContext(), "Failed to fetch user.", Toast.LENGTH_SHORT).show();
             }
