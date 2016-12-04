@@ -9,8 +9,6 @@
                   android:layout_height="wrap_content"
                   android:weightSum="1">
 
-        <include layout="@layout/toolbar"/>
-
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -18,34 +16,46 @@
                 android:padding="16dp">
 
             <EditText
+                    android:id="@+id/etTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName"
                     android:ems="10"
-                    android:id="@+id/editText"
+                    android:maxLines="1"
                     android:hint="title"/>
 
             <EditText
+                    android:id="@+id/etBody"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textMultiLine"
                     android:ems="10"
-                    android:id="@+id/editText2"
                     android:hint="body"/>
 
             <EditText
+                    android:id="@+id/etTags"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="date"
                     android:ems="10"
-                    android:id="@+id/editText3"/>
+                    android:hint="space separated tags"/>
 
-            <EditText
+            <Spinner
+                    android:id="@+id/dropdownPriority"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="date"
-                    android:ems="10"
-                    android:id="@+id/editText4"/>
+                    android:layout_height="wrap_content"/>
+
+            <Button
+                    android:id="@+id/btnSetDate"
+                    android:text="set date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            <Button
+                    android:id="@+id/btnSetTime"
+                    android:text="set time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

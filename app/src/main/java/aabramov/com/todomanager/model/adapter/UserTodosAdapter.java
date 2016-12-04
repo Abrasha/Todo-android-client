@@ -30,7 +30,6 @@ public class UserTodosAdapter extends RecyclerView.Adapter<UserTodosAdapter.User
 
     public UserTodosAdapter(User currentUser) {
         this.currentUser = currentUser;
-        fetchUser();
     }
 
     @Override
@@ -52,7 +51,7 @@ public class UserTodosAdapter extends RecyclerView.Adapter<UserTodosAdapter.User
         return currentUser.getTodos().size();
     }
 
-    public void fetchUser() {
+    public void fetchTodos() {
         todoService.getUserTodos(currentUser.getId()).enqueue(new Callback<List<Todo>>() {
             @Override
             public void onResponse(Call<List<Todo>> call, Response<List<Todo>> response) {

@@ -98,12 +98,22 @@ public class GenerateRandomTodosActivity extends AppCompatActivity {
 
         @NonNull
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+            return getItemView(position, convertView, parent);
 
+        }
+
+        @Override
+        public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
+            return getItemView(position, convertView, parent);
+        }
+
+        @NonNull
+        private View getItemView(int position, View convertView, ViewGroup parent) {
             View result = convertView;
 
             if (result == null) {
-                result = getLayoutInflater().inflate(android.R.layout.simple_spinner_item, null, false);
+                result = getLayoutInflater().inflate(android.R.layout.simple_spinner_item, parent, false);
             }
 
             TextView itemText = (TextView) result.findViewById(android.R.id.text1);
@@ -113,6 +123,7 @@ public class GenerateRandomTodosActivity extends AppCompatActivity {
             } else {
                 itemText.setText("null at position #" + position);
             }
+
             return result;
         }
     }

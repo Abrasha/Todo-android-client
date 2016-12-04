@@ -2,10 +2,13 @@ package aabramov.com.todomanager.view.activity;
 
 import aabramov.com.todomanager.R;
 import aabramov.com.todomanager.TodoApplication;
+import aabramov.com.todomanager.model.Todo;
 import aabramov.com.todomanager.model.User;
 import aabramov.com.todomanager.model.adapter.UserTodosAdapter;
+import aabramov.com.todomanager.service.TodoService;
 import aabramov.com.todomanager.service.UserService;
 import aabramov.com.todomanager.view.component.LinearRecyclerView;
+import aabramov.com.todomanager.view.fragment.AddTodoDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -45,7 +48,16 @@ public class TodoActivity extends AppCompatActivity {
     FloatingActionButton fabAddTodo;
 
     private UserService userService = TodoApplication.getApplication().getService(UserService.class);
+    private TodoService todoService = TodoApplication.getApplication().getService(TodoService.class);
     private UserTodosAdapter userTodosAdapter;
+    private String currentUserId;
+
+
+    public static void start(Context context, String userId) {
+        Intent todoActivity = new Intent(context, TodoActivity.class);
+        todoActivity.putExtra(KEY_USER_ID, userId);
+        context.startActivity(todoActivity);
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,24 +75,36 @@ public class TodoActivity extends AppCompatActivity {
             }
         });
 
-        String currentUserId = loadCurrentUser();
-
-        loadTodos(currentUserId);
-    }
-
-    public static void start(Context context, String userId) {
-        Intent todoActivity = new Intent(context, TodoActivity.class);
-        todoActivity.putExtra(KEY_USER_ID, userId);
-        context.startActivity(todoActivity);
+        loadCurrentUser();
+        fetchUser();
     }
 
     private void showAddTodoDialog() {
+        AddTodoDialog.newInstance(new AddTodoDialog.OnDismissListener() {
+            @Override
+            public void onDismiss(Todo added) {
+                addUserTodo(added);
+            }
+        }).show(getSupportFragmentManager(), AddTodoDialog.class.getSimpleName());
+    }
 
+    private void addUserTodo(Todo added) {
+        todoService.addUserTodo(currentUserId, added).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                fetchTodos();
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Log.e(TAG, "onFailure: ", t);
+            }
+        });
     }
 
     private String loadCurrentUser() {
         Intent intent = getIntent();
-        String currentUserId = intent.getStringExtra(KEY_USER_ID);
+        currentUserId = intent.getStringExtra(KEY_USER_ID);
 
         if (currentUserId == null) {
             currentUserId = TodoApplication.getApplication().getCurrentUserId();
@@ -88,12 +112,13 @@ public class TodoActivity extends AppCompatActivity {
         return currentUserId;
     }
 
-    private void loadTodos(String currentUserId) {
+    private void fetchUser() {
         userService.getUser(currentUserId).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 userTodosAdapter = new UserTodosAdapter(response.body());
                 lvTodos.setAdapter(userTodosAdapter);
+                fetchTodos();
             }
 
             @Override
@@ -102,6 +127,10 @@ public class TodoActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Failed to fetch user.", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void fetchTodos() {
+        userTodosAdapter.fetchTodos();
     }
 
     @Override
@@ -134,7 +163,7 @@ public class TodoActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == REQUEST_CODE_GENERATE_TODOS && resultCode == RESULT_OK) {
-            userTodosAdapter.fetchUser();
+            userTodosAdapter.fetchTodos();
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
