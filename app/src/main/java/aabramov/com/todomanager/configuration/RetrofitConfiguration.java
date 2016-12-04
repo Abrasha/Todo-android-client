@@ -88,7 +88,7 @@ public class RetrofitConfiguration {
         persistConfiguration();
     }
 
-    public void persistConfiguration() {
+    private void persistConfiguration() {
         SharedPreferences appPreferences = TodoApplication.getApplication().getSharedPreferences();
         appPreferences.edit()
                 .putString(KEY_HOSTNAME, serverAddress.getHostname())
@@ -97,7 +97,7 @@ public class RetrofitConfiguration {
                 .apply();
     }
 
-    public void loadConfiguration() {
+    private void loadConfiguration() {
         SharedPreferences appPreferences = TodoApplication.getApplication().getSharedPreferences();
 
         String hostname = appPreferences.getString(KEY_HOSTNAME, "192.168.0.104");

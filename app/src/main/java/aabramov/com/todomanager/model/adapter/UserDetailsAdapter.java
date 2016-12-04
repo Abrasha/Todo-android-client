@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -64,15 +66,17 @@ public class UserDetailsAdapter extends RecyclerView.Adapter<UserDetailsAdapter.
         });
     }
 
-    protected static class UserDetailsViewHolder extends RecyclerView.ViewHolder {
+    static class UserDetailsViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView tvUsername;
-        private TextView tvUserId;
+        @BindView(android.R.id.text1)
+        TextView tvUsername;
 
-        public UserDetailsViewHolder(View container) {
+        @BindView(android.R.id.text2)
+        TextView tvUserId;
+
+        UserDetailsViewHolder(View container) {
             super(container);
-            tvUsername = (TextView) container.findViewById(android.R.id.text1);
-            tvUserId = (TextView) container.findViewById(android.R.id.text2);
+            ButterKnife.bind(this, container);
         }
     }
 

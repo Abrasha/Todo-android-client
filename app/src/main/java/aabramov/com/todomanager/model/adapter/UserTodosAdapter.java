@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -65,15 +67,17 @@ public class UserTodosAdapter extends RecyclerView.Adapter<UserTodosAdapter.User
         });
     }
 
-    protected static class UserTodosViewHolder extends RecyclerView.ViewHolder {
+    static class UserTodosViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView tvTitle;
-        private TextView tvBody;
+        @BindView(android.R.id.text1)
+        TextView tvTitle;
 
-        public UserTodosViewHolder(View container) {
+        @BindView(android.R.id.text2)
+        TextView tvBody;
+
+        UserTodosViewHolder(View container) {
             super(container);
-            tvTitle = (TextView) container.findViewById(android.R.id.text1);
-            tvBody = (TextView) container.findViewById(android.R.id.text2);
+            ButterKnife.bind(this, container);
         }
     }
 
