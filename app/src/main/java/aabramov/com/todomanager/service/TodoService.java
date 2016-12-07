@@ -1,5 +1,7 @@
 package aabramov.com.todomanager.service;
 
+import aabramov.com.todomanager.model.Priority;
+import aabramov.com.todomanager.model.Status;
 import aabramov.com.todomanager.model.Todo;
 import aabramov.com.todomanager.model.User;
 import retrofit2.Call;
@@ -17,6 +19,12 @@ public interface TodoService {
 
     @GET("/users/{userId}/todos")
     Call<List<Todo>> getUserTodos(@Path("userId") String userId);
+
+    @GET("/users/{userId}/todos")
+    Call<List<Todo>> generateTodoForUserWithStatus(@Path("userId") String userId, @Query("status") Status status);
+
+    @GET("/users/{userId}/todos")
+    Call<List<Todo>> generateTodoForUserWithPriority(@Path("userId") String userId, @Query("priority") Priority priority);
 
     @POST("/users/{userId}/todos/generate")
     Call<List<Todo>> generateTodoForUser(@Path("userId") String userId, @Query("count") int count);

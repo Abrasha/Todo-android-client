@@ -2,6 +2,7 @@ package aabramov.com.todomanager.view.activity;
 
 import aabramov.com.todomanager.R;
 import aabramov.com.todomanager.TodoApplication;
+import aabramov.com.todomanager.model.Status;
 import aabramov.com.todomanager.model.Todo;
 import aabramov.com.todomanager.model.User;
 import aabramov.com.todomanager.model.UserDetails;
@@ -92,6 +93,7 @@ public class TodoActivity extends AppCompatActivity {
             @Override
             public void onRightSwipe(int position) {
                 Log.d(TAG, "onRightSwipe: right swipe on element " + position);
+                setDoneStatus(position);
             }
         };
         ItemTouchHelper.SimpleCallback updateOnLeftSwipeCallback = new OnLeftSwipeCallback(this) {
@@ -103,6 +105,24 @@ public class TodoActivity extends AppCompatActivity {
         };
         new ItemTouchHelper(removeOnRightSwipeCallback).attachToRecyclerView(lvTodos);
         new ItemTouchHelper(updateOnLeftSwipeCallback).attachToRecyclerView(lvTodos);
+    }
+
+    private void setDoneStatus(final int position) {
+        Todo toDelete = userTodosAdapter.getAtPosition(position);
+        toDelete.setStatus(Status.DONE);
+
+        todoService.updateTodoForUser(currentUserId, toDelete.getId(), toDelete).enqueue(new Callback<Todo>() {
+            @Override
+            public void onResponse(Call<Todo> call, Response<Todo> response) {
+                userTodosAdapter.notifyItemChanged(position);
+                userTodosAdapter.fetchTodos();
+            }
+
+            @Override
+            public void onFailure(Call<Todo> call, Throwable t) {
+                Log.e(TAG, "onFailure: ", t);
+            }
+        });
     }
 
     private void deleteItem(final int position) {
@@ -117,7 +137,7 @@ public class TodoActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<Todo>> call, Throwable t) {
-
+                Log.e(TAG, "onFailure: ", t);
             }
         });
 
