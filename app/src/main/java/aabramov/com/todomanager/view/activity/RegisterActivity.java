@@ -27,32 +27,23 @@ import retrofit2.Response;
 public class RegisterActivity extends AppCompatActivity {
 
     private static final String TAG = RegisterActivity.class.getName();
-
+    private final UserService userService = TodoApplication.getApplication().getService(UserService.class);
     @BindView(R.id.etNewUsername)
     EditText etNewUsername;
-
     @BindView(R.id.btnCheckIfExists)
     Button btnCheckIfExists;
-
     @BindView(R.id.btnRegister)
     Button btnRegister;
-
     @BindView(R.id.imgUsernameExists)
     ImageView imgUsernameExists;
-
     @BindColor(android.R.color.holo_red_dark)
     int redColor;
-
     @BindColor(android.R.color.holo_green_light)
     int greenColor;
-
     @BindDrawable(R.drawable.ic_done_black)
     Drawable icSuccess;
-
     @BindDrawable(R.drawable.ic_not_interested_black)
     Drawable icBanned;
-
-    private final UserService userService = TodoApplication.getApplication().getService(UserService.class);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

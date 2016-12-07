@@ -54,27 +54,6 @@ public class RetrofitConfiguration {
                 .build();
     }
 
-    private final class HostInterceptor implements Interceptor {
-
-        @Override
-        public okhttp3.Response intercept(Chain chain) throws IOException {
-            Request request = chain.request();
-
-            HttpUrl newUrl = request.url().newBuilder()
-                    .scheme(serverAddress.getProtocol())
-                    .host(serverAddress.getHostname())
-                    .port(serverAddress.getPort())
-                    .build();
-
-            request = request.newBuilder()
-                    .url(newUrl)
-                    .build();
-
-            return chain.proceed(request);
-        }
-
-    }
-
     public <T> T createService(Class<T> serviceClass) {
         return retrofit.create(serviceClass);
     }
@@ -105,6 +84,27 @@ public class RetrofitConfiguration {
         int port = appPreferences.getInt(KEY_PORT, 8080);
 
         this.serverAddress = new ServerAddress(protocol, hostname, port);
+
+    }
+
+    private final class HostInterceptor implements Interceptor {
+
+        @Override
+        public okhttp3.Response intercept(Chain chain) throws IOException {
+            Request request = chain.request();
+
+            HttpUrl newUrl = request.url().newBuilder()
+                    .scheme(serverAddress.getProtocol())
+                    .host(serverAddress.getHostname())
+                    .port(serverAddress.getPort())
+                    .build();
+
+            request = request.newBuilder()
+                    .url(newUrl)
+                    .build();
+
+            return chain.proceed(request);
+        }
 
     }
 

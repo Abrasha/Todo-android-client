@@ -1,11 +1,9 @@
 package aabramov.com.todomanager.view.fragment;
 
 import aabramov.com.todomanager.R;
-import aabramov.com.todomanager.TodoApplication;
 import aabramov.com.todomanager.model.Priority;
 import aabramov.com.todomanager.model.Status;
 import aabramov.com.todomanager.model.Todo;
-import aabramov.com.todomanager.service.TodoService;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
@@ -29,8 +27,7 @@ import java.util.Date;
  */
 public class AddTodoDialog extends DialogFragment implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
-    private OnDismissListener onDismissListener;
-
+    private final Date todoDate = new Date();
     @BindView(R.id.etTitle)
     EditText etTitle;
 
@@ -48,14 +45,9 @@ public class AddTodoDialog extends DialogFragment implements DatePickerDialog.On
 
     @BindView(R.id.btnSetTime)
     Button btnSetTime;
-
-    private final Date todoDate = new Date();
+    private OnDismissListener onDismissListener;
     private Calendar calendar = Calendar.getInstance();
     private boolean todoAdded = false;
-
-    public interface OnDismissListener {
-        void onDismiss(Todo added);
-    }
 
     public static AddTodoDialog newInstance(OnDismissListener listener) {
         AddTodoDialog result = new AddTodoDialog();
@@ -164,5 +156,9 @@ public class AddTodoDialog extends DialogFragment implements DatePickerDialog.On
         if (onDismissListener != null && todoAdded) {
             onDismissListener.onDismiss(parseTodo());
         }
+    }
+
+    public interface OnDismissListener {
+        void onDismiss(Todo added);
     }
 }

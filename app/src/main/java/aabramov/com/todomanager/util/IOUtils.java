@@ -11,9 +11,8 @@ import java.util.List;
  */
 public final class IOUtils {
 
-    private static final String TAG = IOUtils.class.getSimpleName();
-
     public static final String EMPTY_STRING = "";
+    private static final String TAG = IOUtils.class.getSimpleName();
 
     /**
      * The stream will be closed after is has been read

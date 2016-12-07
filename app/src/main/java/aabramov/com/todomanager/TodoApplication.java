@@ -24,6 +24,11 @@ public class TodoApplication extends Application {
 
     private String currentUserId;
 
+    public static TodoApplication getApplication() {
+        Log.d(TAG, "getApplication: requested " + TodoApplication.class.getSimpleName());
+        return application;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -35,11 +40,6 @@ public class TodoApplication extends Application {
         retrofitConfiguration = new RetrofitConfiguration();
         todoDatabase = new TodoDatabase(getApplicationContext());
         currentUserId = getSharedPreferences().getString(KEY_USER_ID, null);
-    }
-
-    public static TodoApplication getApplication() {
-        Log.d(TAG, "getApplication: requested " + TodoApplication.class.getSimpleName());
-        return application;
     }
 
     public <T> T getService(Class<T> serviceClass) {

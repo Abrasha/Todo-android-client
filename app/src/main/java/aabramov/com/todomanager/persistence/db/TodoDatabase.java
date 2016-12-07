@@ -37,22 +37,6 @@ public class TodoDatabase extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
 
-    private static final class Metadata {
-        private static final String DATABASE_NAME = "todo_database";
-        private static final int DATABASE_VERSION = 1;
-    }
-
-    public static final class Tables {
-        public static class Servers {
-            public static final String NAME = "servers";
-
-            public static final String COLUMN_ID = "_id";
-            public static final String COLUMN_PROTOCOL = "protocol";
-            public static final String COLUMN_HOSTNAME = "hostname";
-            public static final String COLUMN_PORT = "port";
-        }
-    }
-
     @SuppressWarnings("unchecked")
     public <T> T getRepository(Class<T> repositoryClass) {
         if (repositories.containsKey(repositoryClass)) {
@@ -70,6 +54,22 @@ public class TodoDatabase extends SQLiteOpenHelper {
             return constructor.newInstance(this);
         } catch (Exception e) {
             throw new IllegalArgumentException("Provided constructor with wrong argument list");
+        }
+    }
+
+    private static final class Metadata {
+        private static final String DATABASE_NAME = "todo_database";
+        private static final int DATABASE_VERSION = 1;
+    }
+
+    public static final class Tables {
+        public static class Servers {
+            public static final String NAME = "servers";
+
+            public static final String COLUMN_ID = "_id";
+            public static final String COLUMN_PROTOCOL = "protocol";
+            public static final String COLUMN_HOSTNAME = "hostname";
+            public static final String COLUMN_PORT = "port";
         }
     }
 

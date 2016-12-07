@@ -39,6 +39,20 @@ public class SelectServerDialog extends DialogFragment {
 
     private RetrofitConfiguration configuration;
     private ServersRepository serversRepository;
+    private DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialogInterface, int i) {
+            ServerAddress serverAddress = (ServerAddress) dropdownServers.getSelectedItem();
+            configuration.setServerAddress(serverAddress);
+            Toast.makeText(getActivity(), "Changed server to: " + serverAddress.getAsString(), LENGTH_LONG).show();
+        }
+    };
+    private DialogInterface.OnClickListener negativeListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialogInterface, int i) {
+
+        }
+    };
 
     public static SelectServerDialog newInstance() {
         SelectServerDialog changeServerDialog = new SelectServerDialog();
@@ -48,22 +62,6 @@ public class SelectServerDialog extends DialogFragment {
         changeServerDialog.serversRepository = application.getTodoDatabase().getRepository(ServersRepository.class);
         return changeServerDialog;
     }
-
-    private DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialogInterface, int i) {
-            ServerAddress serverAddress = (ServerAddress) dropdownServers.getSelectedItem();
-            configuration.setServerAddress(serverAddress);
-            Toast.makeText(getActivity(), "Changed server to: " + serverAddress.getAsString(), LENGTH_LONG).show();
-        }
-    };
-
-    private DialogInterface.OnClickListener negativeListener = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialogInterface, int i) {
-
-        }
-    };
 
     @NonNull
     @Override

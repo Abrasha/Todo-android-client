@@ -29,32 +29,17 @@ import static android.widget.Toast.LENGTH_LONG;
 public class AddServerDialog extends DialogFragment {
 
     private static final String TAG = AddServerDialog.class.getName();
-
+    @BindView(R.id.dropdownProtocol)
+    Spinner dropdownProtocol;
+    @BindView(R.id.etHostname)
+    EditText etHostname;
+    @BindView(R.id.etPort)
+    EditText etPort;
     private String hostName;
     private String protocol;
     private int port;
-
-    @BindView(R.id.dropdownProtocol)
-    Spinner dropdownProtocol;
-
-    @BindView(R.id.etHostname)
-    EditText etHostname;
-
-    @BindView(R.id.etPort)
-    EditText etPort;
-
     private RetrofitConfiguration configuration;
     private ServersRepository serversRepository;
-
-    public static AddServerDialog newInstance() {
-        Log.d(TAG, "newInstance: creating AddServerDialog instance");
-        AddServerDialog dialog = new AddServerDialog();
-        TodoApplication application = TodoApplication.getApplication();
-        dialog.configuration = application.getRetrofitConfiguration();
-        dialog.serversRepository = application.getTodoDatabase().getRepository(ServersRepository.class);
-        return dialog;
-    }
-
     private DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialogInterface, int i) {
@@ -64,13 +49,21 @@ public class AddServerDialog extends DialogFragment {
             Toast.makeText(getActivity(), "Added new server: " + serverAddress.getAsString(), LENGTH_LONG).show();
         }
     };
-
     private DialogInterface.OnClickListener negativeListener = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialogInterface, int i) {
 
         }
     };
+
+    public static AddServerDialog newInstance() {
+        Log.d(TAG, "newInstance: creating AddServerDialog instance");
+        AddServerDialog dialog = new AddServerDialog();
+        TodoApplication application = TodoApplication.getApplication();
+        dialog.configuration = application.getRetrofitConfiguration();
+        dialog.serversRepository = application.getTodoDatabase().getRepository(ServersRepository.class);
+        return dialog;
+    }
 
     private ServerAddress parseServerAddress() {
         hostName = etHostname.getText().toString();

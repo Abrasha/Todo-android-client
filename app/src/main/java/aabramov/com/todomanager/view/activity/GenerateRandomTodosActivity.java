@@ -25,18 +25,14 @@ import static android.widget.Toast.LENGTH_SHORT;
 public class GenerateRandomTodosActivity extends AppCompatActivity {
 
     private final String TAG = GenerateRandomTodosActivity.class.getName();
-
-    private UserService userService = TodoApplication.getApplication().getService(UserService.class);
-    private TodoService todoService = TodoApplication.getApplication().getService(TodoService.class);
-
     @BindView(R.id.progressGenerating)
     ProgressBar progressGenerating;
-
     @BindView(R.id.dropdownSelectUser)
     Spinner dropdownUsers;
-
     @BindView(R.id.etTodosCount)
     EditText etCount;
+    private UserService userService = TodoApplication.getApplication().getService(UserService.class);
+    private TodoService todoService = TodoApplication.getApplication().getService(TodoService.class);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
