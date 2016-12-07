@@ -6,6 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:background="@color/background"
         tools:context=".view.activity.AuthorizeActivity">
 
     <include layout="@layout/toolbar"/>
@@ -22,7 +23,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="16dp"
-                tools:listitem="@android:layout/simple_list_item_1">
+                tools:listitem="@android:layout/simple_list_item_2">
 
         </aabramov.com.todomanager.view.component.LinearRecyclerView>
 

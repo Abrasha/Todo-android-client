@@ -1,5 +1,6 @@
 package aabramov.com.todomanager.model.adapter;
 
+import aabramov.com.todomanager.R;
 import aabramov.com.todomanager.TodoApplication;
 import aabramov.com.todomanager.model.Todo;
 import aabramov.com.todomanager.model.UserDetails;
@@ -38,7 +39,7 @@ public class UserTodosAdapter extends RecyclerView.Adapter<UserTodosAdapter.User
     @Override
     public UserTodosViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(android.R.layout.simple_list_item_2, parent, false);
+                .inflate(R.layout.item_todo, parent, false);
         return new UserTodosViewHolder(v);
     }
 
@@ -47,6 +48,9 @@ public class UserTodosAdapter extends RecyclerView.Adapter<UserTodosAdapter.User
         Todo item = userTodos.get(position);
         holder.tvTitle.setText(item.getTitle());
         holder.tvBody.setText(item.getBody());
+        holder.tvStatus.setText(item.getStatus().toString());
+        holder.tvPriority.setText(item.getPriority().toString());
+        holder.tvDate.setText(item.getWhen().toString());
     }
 
     @Override
@@ -86,11 +90,20 @@ public class UserTodosAdapter extends RecyclerView.Adapter<UserTodosAdapter.User
 
     static class UserTodosViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(android.R.id.text1)
+        @BindView(R.id.tvTitle)
         TextView tvTitle;
 
-        @BindView(android.R.id.text2)
+        @BindView(R.id.tvBody)
         TextView tvBody;
+
+        @BindView(R.id.tvPriority)
+        TextView tvPriority;
+
+        @BindView(R.id.tvStatus)
+        TextView tvStatus;
+
+        @BindView(R.id.tvDate)
+        TextView tvDate;
 
         UserTodosViewHolder(View container) {
             super(container);

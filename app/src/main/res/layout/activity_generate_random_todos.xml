@@ -6,43 +6,52 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:background="@color/background"
         tools:context="aabramov.com.todomanager.view.activity.GenerateRandomTodosActivity">
 
     <include layout="@layout/toolbar"/>
 
-    <Spinner
-            android:id="@+id/dropdownSelectUser"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:spinnerMode="dialog"/>
-
     <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-        <EditText
-                android:id="@+id/etTodosCount"
+        <Spinner
+                android:id="@+id/dropdownSelectUser"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_width="0dp"
-                android:inputType="numberSigned"
-                android:layout_weight="1"
-                android:hint="count"/>
+                android:spinnerMode="dropdown"
+                tools:listitem="@layout/item_spinner"/>
 
-        <Button
-                android:id="@+id/btnGenerate"
-                android:text="Generate"
-                android:layout_width="0dp"
+        <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"/>
+                android:orientation="horizontal"
+                android:layout_marginTop="16dp">
 
+            <EditText
+                    android:id="@+id/etTodosCount"
+                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:inputType="numberSigned"
+                    android:layout_weight="1"
+                    android:hint="count"/>
+
+            <Button
+                    android:id="@+id/btnGenerate"
+                    android:text="Generate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"/>
+
+        </LinearLayout>
+
+        <ProgressBar
+                android:id="@+id/progressGenerating"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="?android:attr/progressBarStyleLarge"/>
     </LinearLayout>
-
-    <ProgressBar
-            android:id="@+id/progressGenerating"
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="?android:attr/progressBarStyleSmall"/>
-
 </LinearLayout>

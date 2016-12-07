@@ -93,7 +93,7 @@ public class GenerateRandomTodosActivity extends AppCompatActivity {
     private class UserAdapter extends ArrayAdapter<UserDetails> {
 
         UserAdapter(List<UserDetails> objects) {
-            super(GenerateRandomTodosActivity.this, android.R.layout.simple_spinner_item, objects);
+            super(GenerateRandomTodosActivity.this, R.layout.item_spinner, objects);
         }
 
         @NonNull
@@ -113,7 +113,7 @@ public class GenerateRandomTodosActivity extends AppCompatActivity {
             View result = convertView;
 
             if (result == null) {
-                result = getLayoutInflater().inflate(android.R.layout.simple_spinner_item, parent, false);
+                result = getLayoutInflater().inflate(R.layout.item_spinner, parent, false);
             }
 
             TextView itemText = (TextView) result.findViewById(android.R.id.text1);
