@@ -41,6 +41,28 @@
 
         </LinearLayout>
 
+
+        <EditText
+                android:id="@+id/etPassword1"
+                android:hint="your password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:selectAllOnFocus="true"
+                android:textSize="24sp"
+                android:inputType="textPassword"
+                android:maxLines="1"/>
+
+
+        <EditText
+                android:id="@+id/etPassword2"
+                android:hint="confirm password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:selectAllOnFocus="true"
+                android:textSize="24sp"
+                android:inputType="textPassword"
+                android:maxLines="1"/>
+
         <Button
                 android:id="@+id/btnCheckIfExists"
                 android:text="Check if login is free"

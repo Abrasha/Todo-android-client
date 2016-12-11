@@ -4,9 +4,7 @@ import aabramov.com.todomanager.model.User;
 import aabramov.com.todomanager.model.UserDetails;
 import aabramov.com.todomanager.model.UserExistsDto;
 import retrofit2.Call;
-import retrofit2.http.Body;
 import retrofit2.http.GET;
-import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 import java.util.List;
@@ -18,9 +16,6 @@ public interface UserService {
 
     @GET("/users")
     Call<List<UserDetails>> getAllUsers();
-
-    @POST("/users")
-    Call<User> addUser(@Body User user);
 
     @GET("/users/{userId}")
     Call<User> getUser(@Path("userId") String userId);

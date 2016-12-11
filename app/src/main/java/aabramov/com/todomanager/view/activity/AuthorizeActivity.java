@@ -5,6 +5,7 @@ import aabramov.com.todomanager.TodoApplication;
 import aabramov.com.todomanager.model.User;
 import aabramov.com.todomanager.model.UserDetails;
 import aabramov.com.todomanager.model.adapter.UserDetailsAdapter;
+import aabramov.com.todomanager.service.AuthorizationService;
 import aabramov.com.todomanager.service.UserService;
 import aabramov.com.todomanager.view.component.InstantAutoCompleteView;
 import aabramov.com.todomanager.view.component.LinearRecyclerView;
@@ -20,10 +21,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ProgressBar;
-import android.widget.Toast;
+import android.widget.*;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit2.Call;
@@ -43,6 +41,9 @@ public class AuthorizeActivity extends AppCompatActivity {
 
     @BindView(R.id.etUsername)
     InstantAutoCompleteView etUsername;
+
+    @BindView(R.id.etPassword)
+    EditText etPassword;
 
     @BindView(R.id.btnListAllUsers)
     Button btnListAllUsers;
@@ -65,6 +66,7 @@ public class AuthorizeActivity extends AppCompatActivity {
     private UserDetailsAdapter adapter;
 
     private UserService userService;
+    private AuthorizationService authorizationService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +76,7 @@ public class AuthorizeActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         userService = TodoApplication.getApplication().getService(UserService.class);
+        authorizationService = TodoApplication.getApplication().getService(AuthorizationService.class);
 
         initViews();
     }
@@ -140,21 +143,32 @@ public class AuthorizeActivity extends AppCompatActivity {
 
     private void performAuthorization() {
         final String username = etUsername.getText().toString();
+        final String password = etPassword.getText().toString();
         progressAuthorizing.setVisibility(View.VISIBLE);
-        userService.getUserByUsername(username).enqueue(new Callback<User>() {
+
+        authorizationService.authorize(username, password).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                String userId = response.body().getId();
-                TodoApplication.getApplication().setCurrentUserId(userId);
-                startTodoActivity(userId);
+                if (response.code() == 500) {
+                    Toast.makeText(AuthorizeActivity.this, "Wrong password or username", Toast.LENGTH_LONG).show();
+                } else {
+                    doLogin(response.body());
+                }
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "No such user: " + username, LENGTH_SHORT).show();
-                progressAuthorizing.setVisibility(View.GONE);
+                Log.e(TAG, "onFailure: authorization failed", t);
             }
         });
+
+
+    }
+
+    private void doLogin(User user) {
+        String userId = user.getId();
+        TodoApplication.getApplication().setCurrentUserId(userId);
+        startTodoActivity(userId);
     }
 
     private void loadUsernames() {

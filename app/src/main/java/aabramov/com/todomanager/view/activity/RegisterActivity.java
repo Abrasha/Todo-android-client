@@ -4,6 +4,7 @@ import aabramov.com.todomanager.R;
 import aabramov.com.todomanager.TodoApplication;
 import aabramov.com.todomanager.model.User;
 import aabramov.com.todomanager.model.UserExistsDto;
+import aabramov.com.todomanager.service.AuthorizationService;
 import aabramov.com.todomanager.service.UserService;
 import aabramov.com.todomanager.view.fragment.InformationDialog;
 import android.graphics.PorterDuff;
@@ -28,8 +29,13 @@ public class RegisterActivity extends AppCompatActivity {
 
     private static final String TAG = RegisterActivity.class.getName();
     private final UserService userService = TodoApplication.getApplication().getService(UserService.class);
+    private final AuthorizationService authorizationService = TodoApplication.getApplication().getService(AuthorizationService.class);
     @BindView(R.id.etNewUsername)
     EditText etNewUsername;
+    @BindView(R.id.etPassword1)
+    EditText etPassword1;
+    @BindView(R.id.etPassword2)
+    EditText etPassword2;
     @BindView(R.id.btnCheckIfExists)
     Button btnCheckIfExists;
     @BindView(R.id.btnRegister)
@@ -121,7 +127,11 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private boolean usernameIsValid(CharSequence username) {
-        return !TextUtils.isEmpty(username);
+        return !TextUtils.isEmpty(username) && passwordIsConfirmedCorrectly();
+    }
+
+    private boolean passwordIsConfirmedCorrectly() {
+        return etPassword1.getText().toString().equals(etPassword2.getText().toString());
     }
 
     private void validateUsername(String username) {
@@ -142,15 +152,12 @@ public class RegisterActivity extends AppCompatActivity {
         if (details.getExists()) {
             InformationDialog.show("Error", "User with such name already exists", getSupportFragmentManager());
         } else {
-            registerUser(details.getUsername());
+            registerUser(details.getUsername(), etPassword1.getText().toString());
         }
     }
 
-    private void registerUser(String username) {
-        User userToAdd = new User();
-        userToAdd.setUsername(username);
-
-        userService.addUser(userToAdd).enqueue(new Callback<User>() {
+    private void registerUser(String username, String password) {
+        authorizationService.register(username, password).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 onUserAdded(response.body());
