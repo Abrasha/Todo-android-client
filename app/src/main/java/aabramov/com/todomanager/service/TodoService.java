@@ -21,10 +21,10 @@ public interface TodoService {
     Call<List<Todo>> getUserTodos(@Path("userId") String userId);
 
     @GET("/users/{userId}/todos")
-    Call<List<Todo>> generateTodoForUserWithStatus(@Path("userId") String userId, @Query("status") Status status);
+    Call<List<Todo>> getTodoForUserWithStatus(@Path("userId") String userId, @Query("status") Status status);
 
     @GET("/users/{userId}/todos")
-    Call<List<Todo>> generateTodoForUserWithPriority(@Path("userId") String userId, @Query("priority") Priority priority);
+    Call<List<Todo>> getTodoForUserWithPriority(@Path("userId") String userId, @Query("priority") Priority priority);
 
     @POST("/users/{userId}/todos/generate")
     Call<List<Todo>> generateTodoForUser(@Path("userId") String userId, @Query("count") int count);

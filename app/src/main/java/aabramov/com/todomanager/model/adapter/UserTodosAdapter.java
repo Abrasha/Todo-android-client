@@ -70,15 +70,14 @@ public class UserTodosAdapter extends RecyclerView.Adapter<UserTodosAdapter.User
     public void setItems(List<Todo> items) {
         userTodos.clear();
         userTodos.addAll(items);
+        notifyDataSetChanged();
     }
 
     public void fetchTodos() {
         todoService.getUserTodos(currentUser.getId()).enqueue(new Callback<List<Todo>>() {
             @Override
             public void onResponse(Call<List<Todo>> call, Response<List<Todo>> response) {
-                userTodos.clear();
-                userTodos = response.body();
-                notifyDataSetChanged();
+                setItems(response.body());
             }
 
             @Override

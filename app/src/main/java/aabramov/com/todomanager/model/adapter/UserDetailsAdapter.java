@@ -1,9 +1,11 @@
 package aabramov.com.todomanager.model.adapter;
 
+import aabramov.com.todomanager.R;
 import aabramov.com.todomanager.TodoApplication;
 import aabramov.com.todomanager.model.UserDetails;
 import aabramov.com.todomanager.service.UserService;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +32,7 @@ public class UserDetailsAdapter extends RecyclerView.Adapter<UserDetailsAdapter.
     @Override
     public UserDetailsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(android.R.layout.simple_list_item_2, parent, false);
+                .inflate(R.layout.item_user_details, parent, false);
         return new UserDetailsViewHolder(v);
     }
 
@@ -61,17 +63,17 @@ public class UserDetailsAdapter extends RecyclerView.Adapter<UserDetailsAdapter.
 
             @Override
             public void onFailure(Call<List<UserDetails>> call, Throwable t) {
-                throw new RuntimeException(t);
+                Log.e(TAG, "onFailure: failed to fetch users", t);
             }
         });
     }
 
     static class UserDetailsViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(android.R.id.text1)
+        @BindView(R.id.tvUsername)
         TextView tvUsername;
 
-        @BindView(android.R.id.text2)
+        @BindView(R.id.tvUserId)
         TextView tvUserId;
 
         UserDetailsViewHolder(View container) {

@@ -89,22 +89,23 @@ public class TodoActivity extends AppCompatActivity {
     }
 
     private void initRecyclerView() {
-        ItemTouchHelper.SimpleCallback removeOnRightSwipeCallback = new OnRightSwipeCallback(this) {
+        ItemTouchHelper.SimpleCallback markAsDoneCallback = new OnRightSwipeCallback(this) {
             @Override
             public void onRightSwipe(int position) {
                 Log.d(TAG, "onRightSwipe: right swipe on element " + position);
                 setDoneStatus(position);
             }
         };
-        ItemTouchHelper.SimpleCallback updateOnLeftSwipeCallback = new OnLeftSwipeCallback(this) {
+        ItemTouchHelper.SimpleCallback removeCallback = new OnLeftSwipeCallback(this) {
             @Override
             public void onLeftSwipe(int position) {
                 Log.d(TAG, "onLeftSwipe: left swipe on element " + position);
                 deleteItem(position);
             }
         };
-        new ItemTouchHelper(removeOnRightSwipeCallback).attachToRecyclerView(lvTodos);
-        new ItemTouchHelper(updateOnLeftSwipeCallback).attachToRecyclerView(lvTodos);
+        new ItemTouchHelper(markAsDoneCallback).attachToRecyclerView(lvTodos);
+        // FIXME: 12/11/16 correct url -> wrong response
+//        new ItemTouchHelper(removeCallback).attachToRecyclerView(lvTodos);
     }
 
     private void setDoneStatus(final int position) {
@@ -132,7 +133,6 @@ public class TodoActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<Todo>> call, Response<List<Todo>> response) {
                 userTodosAdapter.notifyItemRemoved(position);
-                userTodosAdapter.fetchTodos();
             }
 
             @Override
