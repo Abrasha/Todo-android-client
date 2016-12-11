@@ -16,14 +16,20 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        <aabramov.com.todomanager.view.component.LinearRecyclerView
-                android:id="@+id/lvTodos"
+        <android.support.v4.widget.SwipeRefreshLayout
+                android:id="@+id/refreshLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="16dp"
-                tools:listitem="@layout/item_todo">
+                >
 
-        </aabramov.com.todomanager.view.component.LinearRecyclerView>
+            <aabramov.com.todomanager.view.component.LinearRecyclerView
+                    android:id="@+id/lvTodos"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="16dp"
+                    tools:listitem="@layout/item_todo"/>
+
+        </android.support.v4.widget.SwipeRefreshLayout>
 
         <android.support.design.widget.FloatingActionButton
                 android:id="@+id/fab_add_todo"

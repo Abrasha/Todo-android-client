@@ -2,14 +2,18 @@ package aabramov.com.todomanager.model.adapter;
 
 import aabramov.com.todomanager.R;
 import aabramov.com.todomanager.TodoApplication;
+import aabramov.com.todomanager.model.Priority;
 import aabramov.com.todomanager.model.Todo;
 import aabramov.com.todomanager.model.UserDetails;
 import aabramov.com.todomanager.service.TodoService;
+import android.graphics.drawable.GradientDrawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -18,7 +22,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Andrii Abramov on 11/25/16.
@@ -31,9 +37,19 @@ public class UserTodosAdapter extends RecyclerView.Adapter<UserTodosAdapter.User
     private UserDetails currentUser;
 
     private List<Todo> userTodos = new ArrayList<>(0);
+    private Map<Priority, Integer> priorityToColor;
 
     public UserTodosAdapter(UserDetails currentUser) {
         this.currentUser = currentUser;
+        priorityToColor = new HashMap<>();
+        priorityToColor.put(Priority.DEFAULT, getColor(R.color.priority_default));
+        priorityToColor.put(Priority.LOW, getColor(R.color.priority_low));
+        priorityToColor.put(Priority.MEDIUM, getColor(R.color.priority_medium));
+        priorityToColor.put(Priority.HIGH, getColor(R.color.priority_high));
+    }
+
+    private int getColor(int id) {
+        return ContextCompat.getColor(TodoApplication.getApplication(), id);
     }
 
     @Override
@@ -49,6 +65,10 @@ public class UserTodosAdapter extends RecyclerView.Adapter<UserTodosAdapter.User
         holder.tvTitle.setText(item.getTitle());
         holder.tvBody.setText(item.getBody());
         holder.tvStatus.setText(item.getStatus().toString());
+//        priorityToColor.get(item.getPriority())
+        GradientDrawable background = (GradientDrawable) holder.todoContainer.getBackground();
+//        background.setColor(priorityToColor.get(item.getPriority()));
+        background.setStroke(10, priorityToColor.get(item.getPriority()));
         holder.tvPriority.setText(item.getPriority().toString());
         holder.tvDate.setText(item.getWhen().toString());
     }
@@ -88,6 +108,9 @@ public class UserTodosAdapter extends RecyclerView.Adapter<UserTodosAdapter.User
     }
 
     static class UserTodosViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.todoContainer)
+        LinearLayout todoContainer;
 
         @BindView(R.id.tvTitle)
         TextView tvTitle;

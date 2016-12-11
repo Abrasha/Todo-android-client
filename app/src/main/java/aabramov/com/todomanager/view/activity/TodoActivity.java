@@ -10,7 +10,6 @@ import aabramov.com.todomanager.model.adapter.UserTodosAdapter;
 import aabramov.com.todomanager.service.TodoService;
 import aabramov.com.todomanager.service.UserService;
 import aabramov.com.todomanager.view.component.LinearRecyclerView;
-import aabramov.com.todomanager.view.component.OnLeftSwipeCallback;
 import aabramov.com.todomanager.view.component.OnRightSwipeCallback;
 import aabramov.com.todomanager.view.fragment.AddTodoDialog;
 import android.content.Context;
@@ -18,6 +17,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -53,6 +53,9 @@ public class TodoActivity extends AppCompatActivity {
 
     @BindView(R.id.fab_add_todo)
     FloatingActionButton fabAddTodo;
+
+    @BindView(R.id.refreshLayout)
+    SwipeRefreshLayout refreshLayout;
 
     private UserService userService = TodoApplication.getApplication().getService(UserService.class);
     private TodoService todoService = TodoApplication.getApplication().getService(TodoService.class);
@@ -96,15 +99,25 @@ public class TodoActivity extends AppCompatActivity {
                 setDoneStatus(position);
             }
         };
-        ItemTouchHelper.SimpleCallback removeCallback = new OnLeftSwipeCallback(this) {
-            @Override
-            public void onLeftSwipe(int position) {
-                Log.d(TAG, "onLeftSwipe: left swipe on element " + position);
-                deleteItem(position);
-            }
-        };
         new ItemTouchHelper(markAsDoneCallback).attachToRecyclerView(lvTodos);
-        // FIXME: 12/11/16 correct url -> wrong response
+
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshLayout.setRefreshing(true);
+                fetchTodos();
+            }
+        });
+
+
+//        ItemTouchHelper.SimpleCallback removeCallback = new OnLeftSwipeCallback(this) {
+//            @Override
+//            public void onLeftSwipe(int position) {
+//                Log.d(TAG, "onLeftSwipe: left swipe on element " + position);
+//                deleteItem(position);
+//            }
+//        };
+//        FIXME: 12/11/16 correct url -> wrong response
 //        new ItemTouchHelper(removeCallback).attachToRecyclerView(lvTodos);
     }
 
@@ -156,7 +169,7 @@ public class TodoActivity extends AppCompatActivity {
         todoService.addUserTodo(currentUserId, added).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                fetchTodos();
+                userTodosAdapter.setItems(response.body().getTodos());
             }
 
             @Override
@@ -195,6 +208,7 @@ public class TodoActivity extends AppCompatActivity {
 
     private void fetchTodos() {
         userTodosAdapter.fetchTodos();
+        refreshLayout.setRefreshing(false);
     }
 
     @Override

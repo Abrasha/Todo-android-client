@@ -9,4 +9,9 @@
     <color name="background">#F3FAB6</color>
     <color name="toolbar_orange">#ffa047</color>
     <color name="gold">#edb37c</color>
+    <color name="priority_default">#b1a8a0</color>
+    <color name="priority_low">#a5d6a7</color>
+    <color name="priority_medium">#ffab40</color>
+    <color name="priority_high">#ff6e40</color>
+    <color name="todo_background">#eaeaea</color>
 </resources>
