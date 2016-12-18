@@ -115,10 +115,8 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void performRegistration() {
         String username = parseUsername();
-        if (usernameIsValid(username)) {
+        if (usernameIsValid(username) && passwordIsConfirmedCorrectly()) {
             validateUsername(username);
-        } else {
-            InformationDialog.show("Error", "No username provided", getSupportFragmentManager());
         }
     }
 
@@ -127,11 +125,19 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private boolean usernameIsValid(CharSequence username) {
-        return !TextUtils.isEmpty(username) && passwordIsConfirmedCorrectly();
+        boolean correct = !TextUtils.isEmpty(username);
+        if (!correct) {
+            InformationDialog.show("Error", "No username provided", getSupportFragmentManager());
+        }
+        return correct;
     }
 
     private boolean passwordIsConfirmedCorrectly() {
-        return etPassword1.getText().toString().equals(etPassword2.getText().toString());
+        boolean correct = etPassword1.getText().toString().equals(etPassword2.getText().toString());
+        if (!correct) {
+            InformationDialog.show("Error", "Passwords do not match", getSupportFragmentManager());
+        }
+        return correct;
     }
 
     private void validateUsername(String username) {
