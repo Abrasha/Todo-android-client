@@ -27,14 +27,16 @@
             android:layout_width="match_parent"
             android:text="Priority"
             android:layout_height="wrap_content"
-            style="@style/TextAppearance.AppCompat.Medium.Inverse"/>
+            style="@style/TextAppearance.AppCompat.Medium.Inverse"
+            android:textColor="@color/gold"/>
 
     <TextView
             android:id="@+id/tvStatus"
             android:layout_width="match_parent"
             android:text="Status"
             android:layout_height="wrap_content"
-            style="@style/TextAppearance.AppCompat.Medium.Inverse"/>
+            style="@style/TextAppearance.AppCompat.Medium.Inverse"
+            android:textColor="@color/colorPrimaryDark"/>
 
     <TextView
             android:id="@+id/tvDate"

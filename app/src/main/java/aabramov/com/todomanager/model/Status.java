@@ -5,6 +5,9 @@ package aabramov.com.todomanager.model;
  */
 public enum Status {
 
-    DEFAULT, DONE, SUSPENDED, IN_PROGRESS
+    IN_PROGRESS,
+    SUSPENDED,
+    DEFAULT,
+    DONE
 
 }

@@ -5,6 +5,9 @@ package aabramov.com.todomanager.model;
  */
 public enum Priority {
 
-    DEFAULT, HIGH, MEDIUM, LOW
+    HIGH,
+    MEDIUM,
+    LOW,
+    DEFAULT
 
 }

@@ -11,10 +11,12 @@ import aabramov.com.todomanager.view.component.InstantAutoCompleteView;
 import aabramov.com.todomanager.view.component.LinearRecyclerView;
 import aabramov.com.todomanager.view.component.RecyclerItemClickListener;
 import aabramov.com.todomanager.view.fragment.AddServerDialog;
+import aabramov.com.todomanager.view.fragment.GenerateUserDialog;
 import aabramov.com.todomanager.view.fragment.SelectServerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -30,6 +32,7 @@ import retrofit2.Response;
 
 import java.util.List;
 
+import static android.view.View.GONE;
 import static android.widget.Toast.LENGTH_SHORT;
 
 /**
@@ -63,7 +66,10 @@ public class AuthorizeActivity extends AppCompatActivity {
     @BindView(R.id.action_toolbar)
     Toolbar toolbar;
 
-    private UserDetailsAdapter adapter;
+    @BindView(R.id.refreshLayoutUsers)
+    SwipeRefreshLayout refreshLayoutUsers;
+
+    private UserDetailsAdapter userDetailsAdapter;
 
     private UserService userService;
     private AuthorizationService authorizationService;
@@ -74,6 +80,14 @@ public class AuthorizeActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_authorization);
         ButterKnife.bind(this);
+
+        refreshLayoutUsers.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshLayoutUsers.setRefreshing(true);
+                fetchUsers();
+            }
+        });
 
         userService = TodoApplication.getApplication().getService(UserService.class);
         authorizationService = TodoApplication.getApplication().getService(AuthorizationService.class);
@@ -110,7 +124,7 @@ public class AuthorizeActivity extends AppCompatActivity {
         btnListAllUsers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                adapter.fetchUsernames();
+                fetchUsers();
             }
         });
 
@@ -122,6 +136,11 @@ public class AuthorizeActivity extends AppCompatActivity {
         });
     }
 
+    private void fetchUsers() {
+        userDetailsAdapter.fetchUserDetails();
+        refreshLayoutUsers.setRefreshing(false);
+    }
+
     private void startRegisterActivity() {
         Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -129,11 +148,11 @@ public class AuthorizeActivity extends AppCompatActivity {
     }
 
     private void initRecycleView() {
-        adapter = new UserDetailsAdapter();
+        userDetailsAdapter = new UserDetailsAdapter();
 
-        lvUsers.setHasFixedSize(true);
+        lvUsers.setHasFixedSize(false);
         lvUsers.addOnItemTouchListener(createOnClickListener());
-        lvUsers.setAdapter(adapter);
+        lvUsers.setAdapter(userDetailsAdapter);
     }
 
     @NonNull
@@ -149,6 +168,7 @@ public class AuthorizeActivity extends AppCompatActivity {
         authorizationService.authorize(username, password).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
+                progressAuthorizing.setVisibility(GONE);
                 if (response.code() == 500) {
                     Toast.makeText(AuthorizeActivity.this, "Wrong password or username", Toast.LENGTH_LONG).show();
                 } else {
@@ -175,7 +195,7 @@ public class AuthorizeActivity extends AppCompatActivity {
         userService.getUsernames().enqueue(new Callback<List<String>>() {
             @Override
             public void onResponse(Call<List<String>> call, Response<List<String>> response) {
-                etUsername.setAdapter(createUserDetailsAdapter(response));
+                etUsername.setAdapter(createUserDetailsAdapter(response.body()));
             }
 
             @Override
@@ -186,12 +206,12 @@ public class AuthorizeActivity extends AppCompatActivity {
     }
 
     @NonNull
-    private ArrayAdapter<String> createUserDetailsAdapter(Response<List<String>> response) {
-        return new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, response.body());
+    private ArrayAdapter<String> createUserDetailsAdapter(List<String> usernames) {
+        return new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, usernames);
     }
 
     private void startTodoActivity(String userId) {
-        progressAuthorizing.setVisibility(View.GONE);
+        progressAuthorizing.setVisibility(GONE);
         TodoActivity.start(this, userId);
     }
 
@@ -213,10 +233,36 @@ public class AuthorizeActivity extends AppCompatActivity {
                 showSelectServerDialog();
                 return true;
 
+            case R.id.menu_item_generate_users:
+                showGenerateUsersDialog();
+
             default:
                 return super.onOptionsItemSelected(item);
 
         }
+    }
+
+    private void showGenerateUsersDialog() {
+        GenerateUserDialog.newInstance(new GenerateUserDialog.OnUsersGeneratedListener() {
+            @Override
+            public void onUsersGenerated(int count) {
+                generateUsers(count);
+            }
+        }).show(getSupportFragmentManager(), GenerateUserDialog.class.getName());
+    }
+
+    private void generateUsers(int count) {
+        userService.generateUsers(count).enqueue(new Callback<List<UserDetails>>() {
+            @Override
+            public void onResponse(Call<List<UserDetails>> call, Response<List<UserDetails>> response) {
+                userDetailsAdapter.setUserDetails(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<List<UserDetails>> call, Throwable t) {
+                Log.e(TAG, "onFailure: ", t);
+            }
+        });
     }
 
     private void showAddServerDialog() {
@@ -231,7 +277,7 @@ public class AuthorizeActivity extends AppCompatActivity {
 
         @Override
         public void onItemClick(View view, int position) {
-            UserDetails userId = adapter.getAtPosition(position);
+            UserDetails userId = userDetailsAdapter.getAtPosition(position);
             startTodoActivity(userId.getId());
         }
 

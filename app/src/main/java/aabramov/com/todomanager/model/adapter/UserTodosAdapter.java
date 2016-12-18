@@ -21,10 +21,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Andrii Abramov on 11/25/16.
@@ -65,9 +62,7 @@ public class UserTodosAdapter extends RecyclerView.Adapter<UserTodosAdapter.User
         holder.tvTitle.setText(item.getTitle());
         holder.tvBody.setText(item.getBody());
         holder.tvStatus.setText(item.getStatus().toString());
-//        priorityToColor.get(item.getPriority())
         GradientDrawable background = (GradientDrawable) holder.todoContainer.getBackground();
-//        background.setColor(priorityToColor.get(item.getPriority()));
         background.setStroke(10, priorityToColor.get(item.getPriority()));
         holder.tvPriority.setText(item.getPriority().toString());
         holder.tvDate.setText(item.getWhen().toString());
@@ -90,6 +85,14 @@ public class UserTodosAdapter extends RecyclerView.Adapter<UserTodosAdapter.User
     public void setItems(List<Todo> items) {
         userTodos.clear();
         userTodos.addAll(items);
+
+        Collections.sort(userTodos, new Comparator<Todo>() {
+            @Override
+            public int compare(Todo first, Todo second) {
+                return first.getPriority().compareTo(second.getPriority());
+            }
+        });
+
         notifyDataSetChanged();
     }
 

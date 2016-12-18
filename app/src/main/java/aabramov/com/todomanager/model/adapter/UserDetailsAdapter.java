@@ -52,13 +52,11 @@ public class UserDetailsAdapter extends RecyclerView.Adapter<UserDetailsAdapter.
         return userDetailsList.get(position);
     }
 
-    public void fetchUsernames() {
+    public void fetchUserDetails() {
         userService.getAllUsers().enqueue(new Callback<List<UserDetails>>() {
             @Override
             public void onResponse(Call<List<UserDetails>> call, Response<List<UserDetails>> response) {
-                userDetailsList.clear();
-                userDetailsList.addAll(response.body());
-                notifyDataSetChanged();
+                setUserDetails(response.body());
             }
 
             @Override
@@ -66,6 +64,12 @@ public class UserDetailsAdapter extends RecyclerView.Adapter<UserDetailsAdapter.
                 Log.e(TAG, "onFailure: failed to fetch users", t);
             }
         });
+    }
+
+    public void setUserDetails(List<UserDetails> users) {
+        userDetailsList.clear();
+        userDetailsList.addAll(users);
+        notifyDataSetChanged();
     }
 
     static class UserDetailsViewHolder extends RecyclerView.ViewHolder {

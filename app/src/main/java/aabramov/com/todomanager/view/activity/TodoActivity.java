@@ -88,7 +88,7 @@ public class TodoActivity extends AppCompatActivity {
         });
 
         loadCurrentUser();
-        fetchUser();
+        fetchUserDetails();
     }
 
     private void initRecyclerView() {
@@ -189,7 +189,7 @@ public class TodoActivity extends AppCompatActivity {
         return currentUserId;
     }
 
-    private void fetchUser() {
+    private void fetchUserDetails() {
         userService.getUserDetails(currentUserId).enqueue(new Callback<UserDetails>() {
             @Override
             public void onResponse(Call<UserDetails> call, Response<UserDetails> response) {

@@ -11,4 +11,9 @@
             android:title="Add server"
             android:icon="@android:drawable/ic_menu_edit"
             appCompat:showAsAction="ifRoom|withText"/>
+    <item
+            android:id="@+id/menu_item_generate_users"
+            android:title="Generate users"
+            android:icon="@android:drawable/btn_plus"
+            appCompat:showAsAction="never"/>
 </menu>
